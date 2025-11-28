@@ -11,6 +11,46 @@ body {
   padding: 20px;
   color: #333;
   background-attachment: fixed;
+  position: relative;
+}
+
+/* Snowflakes Animation */
+.snowflakes {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.snowflake {
+  position: absolute;
+  top: -10px;
+  color: #fff;
+  font-size: 1.5em;
+  text-shadow: 0 0 5px #fff;
+  animation: fall linear infinite;
+  opacity: 0.8;
+}
+
+.snowflake:nth-child(1) { left: 10%; animation-duration: 10s; }
+.snowflake:nth-child(2) { left: 20%; animation-duration: 12s; animation-delay: 2s; }
+.snowflake:nth-child(3) { left: 30%; animation-duration: 14s; animation-delay: 4s; }
+.snowflake:nth-child(4) { left: 40%; animation-duration: 11s; animation-delay: 1s; }
+.snowflake:nth-child(5) { left: 50%; animation-duration: 13s; animation-delay: 3s; }
+.snowflake:nth-child(6) { left: 60%; animation-duration: 15s; animation-delay: 5s; }
+.snowflake:nth-child(7) { left: 70%; animation-duration: 10s; animation-delay: 0s; }
+.snowflake:nth-child(8) { left: 80%; animation-duration: 12s; animation-delay: 2s; }
+.snowflake:nth-child(9) { left: 90%; animation-duration: 14s; animation-delay: 4s; }
+.snowflake:nth-child(10) { left: 5%; animation-duration: 13s; animation-delay: 1s; }
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotateZ(360deg);
+    opacity: 0;
+  }
 }
 
 .container {
@@ -21,6 +61,8 @@ body {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   animation: slideUp 0.6s ease;
+  position: relative;
+  z-index: 2;
 }
 
 @keyframes slideUp {
@@ -42,6 +84,13 @@ body {
   text-align: center;
   position: relative;
   overflow: hidden;
+}
+
+.header-decoration {
+  font-size: 2em;
+  margin-top: 15px;
+  animation: bounce 3s ease-in-out infinite;
+  letter-spacing: 3px;
 }
 
 .header::before {
@@ -134,8 +183,125 @@ body {
 .menu-section h2 {
   color: #667eea;
   font-size: 2.5em;
-  margin-bottom: 20px;
-  text-shadow: 2px 2px 4px rgba(102, 126, 234, 0.1);
+  margin-bottom: 40px;
+  animation: popIn 0.6s ease;
+}
+
+/* Festive Decoration */
+.festive-decoration {
+  font-size: 2.5em;
+  margin: 40px 0;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  animation: fadeIn 1s ease;
+}
+
+.decoration-item {
+  display: inline-block;
+  animation: spin 3s linear infinite;
+}
+
+.decoration-item:nth-child(1) { animation-delay: 0s; }
+.decoration-item:nth-child(2) { animation-delay: 0.3s; }
+.decoration-item:nth-child(3) { animation-delay: 0.6s; }
+.decoration-item:nth-child(4) { animation-delay: 0.9s; }
+.decoration-item:nth-child(5) { animation-delay: 1.2s; }
+.decoration-item:nth-child(6) { animation-delay: 1.5s; }
+.decoration-item:nth-child(7) { animation-delay: 1.8s; }
+.decoration-item:nth-child(8) { animation-delay: 2.1s; }
+.decoration-item:nth-child(9) { animation-delay: 2.4s; }
+.decoration-item:nth-child(10) { animation-delay: 2.7s; }
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Large Christmas Art Decorations */
+.large-christmas-art {
+  margin: 40px 0;
+  text-align: center;
+  animation: popIn 0.8s ease;
+}
+
+.christmas-ascii {
+  font-size: 1.8em;
+  font-family: 'Courier New', monospace;
+  color: #e74c3c;
+  font-weight: bold;
+  line-height: 1.8;
+  text-shadow: 
+    0 0 10px rgba(231, 76, 60, 0.5),
+    0 0 20px rgba(231, 76, 60, 0.3),
+    2px 2px 4px rgba(0, 0, 0, 0.2);
+  margin: 20px 0;
+  animation: bounce 3s ease-in-out infinite;
+  letter-spacing: 2px;
+}
+
+.christmas-ascii.big-art {
+  font-size: 2.2em;
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Page Decorations */
+.page-decoration {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.small-christmas {
+  font-size: 1.5em;
+  font-family: 'Courier New', monospace;
+  color: #e74c3c;
+  font-weight: bold;
+  text-shadow: 
+    0 0 8px rgba(231, 76, 60, 0.6),
+    0 0 15px rgba(231, 76, 60, 0.4);
+  margin: 10px 0;
+  animation: bounce 2s ease-in-out infinite;
+  letter-spacing: 1px;
+}
+
+/* Section Decorations */
+.section-decoration {
+  font-size: 2.5em;
+  text-align: center;
+  margin: 15px 0;
+  animation: float 3s ease-in-out infinite;
+  letter-spacing: 5px;
+}
+
+.drawing-actions .btn,
+.intermediate-actions .btn,
+.actions-section .btn {
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1px;
+  font-size: 1.1em;
+}
+
+.results-header h4 {
+  font-size: 1.8em;
+  letter-spacing: 2px;
+  animation: bounce 2s ease-in-out infinite;
 }
 
 .menu-buttons {
@@ -739,4 +905,20 @@ select:disabled {
   background: #f5f5f5;
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Footer Decorations */
+.footer {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  color: white;
+  text-align: center;
+  padding: 30px;
+  font-weight: 600;
+}
+
+.footer-decoration {
+  margin-top: 10px;
+  font-size: 1.8em;
+  letter-spacing: 4px;
+  animation: bounce 3s ease-in-out infinite;
 }
