@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🚀 Deploy Amigão - Render Gratuito</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 40%, #f093fb 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 25px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 50px;
+      animation: slideUp 0.6s ease;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    h1 {
+      color: #667eea;
+      font-size: 2.5em;
+      margin-bottom: 30px;
+      text-align: center;
+      text-shadow: 2px 2px 4px rgba(102, 126, 234, 0.2);
+    }
+    
+    .step {
+      margin: 40px 0;
+      padding: 25px;
+      border-left: 5px solid #667eea;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(240, 147, 251, 0.1) 100%);
+      border-radius: 12px;
+      animation: fadeIn 0.6s ease;
+    }
+    
+    .step h2 {
+      color: #667eea;
+      font-size: 1.5em;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .step-number {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 40px;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    
+    .step p, .step li {
+      color: #333;
+      font-size: 1.1em;
+      line-height: 1.8;
+      margin: 10px 0;
+    }
+    
+    .step ul {
+      margin-left: 25px;
+    }
+    
+    .code-block {
+      background: #f5f5f5;
+      border: 2px solid #667eea;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+      font-family: 'Courier New', monospace;
+      overflow-x: auto;
+      color: #333;
+      font-size: 0.95em;
+    }
+    
+    .link-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 10px 10px 10px 0;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    
+    .link-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .warning {
+      background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+      border-left: 5px solid #ffc107;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      color: #856404;
+    }
+    
+    .success {
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      border-left: 5px solid #28a745;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      color: #155724;
+    }
+    
+    .emoji {
+      font-size: 1.5em;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 50px;
+      padding-top: 30px;
+      border-top: 2px solid #eee;
+      color: #667eea;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1><span class="emoji">🎄</span> Deploy Amigão - GRATUITO <span class="emoji">🚀</span></h1>
+    
+    <div class="success">
+      <strong>✅ Boas notícias!</strong> O teu Amigão pode estar online em minutos, completamente GRATUITO no Render!
+    </div>
+    
+    <!-- PASSO 1 -->
+    <div class="step">
+      <h2>
+        <span class="step-number">1</span>
+        Criar Conta no GitHub
+      </h2>
+      <p>Se ainda não tiveres conta no GitHub, cria uma (é gratuito!):</p>
+      <ul>
+        <li>Vai a <a href="https://github.com/signup" target="_blank" class="link-button">GitHub Signup</a></li>
+        <li>Preenche os dados (email, password, username)</li>
+        <li>Verifica o email para confirmar</li>
+      </ul>
+    </div>
+    
+    <!-- PASSO 2 -->
+    <div class="step">
+      <h2>
+        <span class="step-number">2</span>
+        Criar Repositório no GitHub
+      </h2>
+      <p>Clica em <strong>New Repository</strong> e preenche:</p>
+      <ul>
+        <li><strong>Repository name:</strong> amigao</li>
+        <li><strong>Description:</strong> 🎄 Amigão - Secret Santa Sorteio de Amigo Secreto com WhatsApp</li>
+        <li><strong>Visibility:</strong> PUBLIC (importante para ser gratuito!)</li>
+        <li><strong>Clica:</strong> Create repository</li>
+      </ul>
+      <a href="https://github.com/new" target="_blank" class="link-button">Ir para GitHub New Repo</a>
+    </div>
+    
+    <!-- PASSO 3 -->
+    <div class="step">
+      <h2>
+        <span class="step-number">3</span>
+        Fazer Push do Código
+      </h2>
+      <p>Executa estes comandos no terminal (um de cada vez):</p>
+      
+      <p><strong>Configurar utilizador Git (primeira vez apenas):</strong></p>
+      <div class="code-block">
+git config --global user.name "Jaime Mascarenhas"<br>
+git config --global user.email "teu-email@gmail.com"
+      </div>
+      
+      <p><strong>Adicionar repositório remoto (substitui USERNAME pelo teu username do GitHub):</strong></p>
+      <div class="code-block">
+cd ~/Secretária/Projeto\ Amigo\ Secreto<br>
+git remote add origin https://github.com/USERNAME/amigao.git<br>
+git branch -M main<br>
+git push -u origin main
+      </div>
+      
+      <div class="warning">
+        <strong>⚠️ Importante:</strong> Substitui USERNAME pelo teu username do GitHub (o nome que usaste ao criar a conta)
+      </div>
+    </div>
+    
+    <!-- PASSO 4 -->
+    <div class="step">
+      <h2>
+        <span class="step-number">4</span>
+        Deploy no Render (GRATUITO)
+      </h2>
+      <p>Agora vamos fazer o deploy online:</p>
+      <ul>
+        <li>Vai a <a href="https://render.com" target="_blank" class="link-button">Render.com</a></li>
+        <li>Clica em <strong>Sign up</strong></li>
+        <li>Escolhe <strong>GitHub</strong> como método</li>
+        <li>Autoriza o Render</li>
+        <li>Clica em <strong>New +</strong> → <strong>Web Service</strong></li>
+        <li>Escolhe o repo <strong>amigao</strong></li>
+      </ul>
+      
+      <p><strong>Configura os campos:</strong></p>
+      <div class="code-block">
+Name: amigao<br>
+Environment: Node<br>
+Build Command: npm install<br>
+Start Command: node server.js<br>
+Plan: Free (gratuito!)
+      </div>
+      
+      <p>Clica em <strong>Deploy Web Service</strong> e pronto! 🎉</p>
+    </div>
+    
+    <!-- PASSO 5 -->
+    <div class="step">
+      <h2>
+        <span class="step-number">5</span>
+        Aguardar Deploy
+      </h2>
+      <p>O Render vai:</p>
+      <ul>
+        <li>Compilar o código (alguns segundos)</li>
+        <li>Instalar dependências (npm install)</li>
+        <li>Iniciar o servidor</li>
+        <li>Dar-te um URL público!</li>
+      </ul>
+      <p><strong>URL tipo:</strong> https://amigao-xxxxx.onrender.com</p>
+      <p>O site estará online em 2-5 minutos! 🚀</p>
+    </div>
+    
+    <!-- INFO -->
+    <div class="warning">
+      <strong>ℹ️ Informações Importantes:</strong>
+      <ul style="margin-top: 10px;">
+        <li>✅ Render é 100% gratuito (no plano Free)</li>
+        <li>✅ Suporta Node.js perfeitamente</li>
+        <li>⚠️ O servidor hiberna após 15 min de inatividade (acorda ao primeiro acesso)</li>
+        <li>⚠️ Dados salvos localmente (resetam se o servidor reiniciar)</li>
+        <li>💡 Para persistência total, adiciona uma BD (PostgreSQL, MongoDB, etc)</li>
+      </ul>
+    </div>
+    
+    <div class="success">
+      <strong>🎉 Parabéns!</strong> O teu Amigão estará online e TOTALMENTE GRATUITO! 🎄✨
+    </div>
+    
+    <div class="footer">
+      <p>💚 Amigão v1.0.0 | Desenvolvido por Jaime Soares Mascarenhas ✨ | © 2025</p>
+      <p>🎅 🎄 🎁 ✨ ⛄ 🔔 💚 ❤️ 🌟 🎉</p>
+    </div>
+  </div>
+</body>
+</html>
