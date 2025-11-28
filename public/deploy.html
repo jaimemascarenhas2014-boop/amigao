@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploy Amigão - Guia Rápido</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            border-left: 5px solid #667eea;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .step-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .step-content {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            color: #333;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-secondary:hover {
+            background: #efefef;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #2e7d32;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #1565c0;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #856404;
+        }
+
+        .checklist {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .checklist li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f5f5f5;
+            border-radius: 5px;
+            color: #333;
+        }
+
+        .checklist li:before {
+            content: "✓ ";
+            color: #4caf50;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .footer {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            margin-top: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .timeline-marker {
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-right: 20px;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .timeline-content strong {
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .timeline-content p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .step-card {
+                padding: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Publicar Amigão Online</h1>
+            <p>Deploy Gratuito em 5 Minutos</p>
+        </div>
+
+        <div class="step-card">
+            <div class="step-number">1️⃣</div>
+            <div class="step-title">Criar Conta no GitHub</div>
+            <div class="step-content">
+                <p>Vais guardar o teu código online para o Render poder aceder.</p>
+                <div class="button-group">
+                    <a href="https://github.com/signup" target="_blank" class="btn btn-primary">
+                        Criar Conta GitHub
+                    </a>
+                </div>
+                <ul class="checklist">
+                    <li>Escolhe um username</li>
+                    <li>Confirma o email</li>
+                    <li>Pronto!</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-number">2️⃣</div>
+            <div class="step-title">Criar Repositório e Push</div>
+            <div class="step-content">
+                <p>Envia o teu código para GitHub.</p>
+                
+                <p><strong>Opção A: Usando GitHub Web (mais fácil)</strong></p>
+                <ol style="margin-left: 20px;">
+                    <li>Vai a <a href="https://github.com/new" target="_blank">github.com/new</a></li>
+                    <li>Nome: <code style="background: #f0f0f0; padding: 2px 5px; border-radius: 3px;">amigao</code></li>
+                    <li>Seleciona "Public"</li>
+                    <li>Clica "Create repository"</li>
+                </ol>
+
+                <p style="margin-top: 15px;"><strong>Opção B: Terminal</strong></p>
+                <div class="code-block">
+git remote add origin https://github.com/SEU_USERNAME/amigao.git
+git branch -M main
+git push -u origin main
+                </div>
+                <p style="font-size: 12px; color: #999;">
+                    ⚠️ Substitui <code>SEU_USERNAME</code> com o teu username do GitHub
+                </p>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-number">3️⃣</div>
+            <div class="step-title">Deploy no Render</div>
+            <div class="step-content">
+                <div class="info-box">
+                    ℹ️ <strong>Render é gratuito</strong> e não precisa de cartão de crédito para começar!
+                </div>
+
+                <ol style="margin-left: 20px; line-height: 2;">
+                    <li>Vai a <a href="https://render.com" target="_blank">render.com</a></li>
+                    <li>Clica "Sign Up" (escolhe GitHub para mais fácil)</li>
+                    <li>Clica "New +" → "Web Service"</li>
+                    <li>Seleciona o repositório <code style="background: #f0f0f0; padding: 2px 5px;">amigao</code></li>
+                    <li>Configura:
+                        <ul style="margin-top: 10px; margin-left: 20px;">
+                            <li><strong>Name:</strong> amigao</li>
+                            <li><strong>Environment:</strong> Node</li>
+                            <li><strong>Build Command:</strong> npm install</li>
+                            <li><strong>Start Command:</strong> npm start</li>
+                            <li><strong>Plan:</strong> Free ✅</li>
+                        </ul>
+                    </li>
+                    <li>Clica "Create Web Service"</li>
+                </ol>
+
+                <div class="success-box">
+                    ✅ Render faz deploy automático! Pode levar 2-3 minutos.
+                </div>
+            </div>
+        </div>
+
+        <div class="step-card">
+            <div class="step-number">4️⃣</div>
+            <div class="step-title">Vai Estar Online!</div>
+            <div class="step-content">
+                <p>Quando terminar, tens uma URL assim:</p>
+                <div class="code-block">
+https://amigao.onrender.com
+                </div>
+
+                <p style="margin-top: 15px;">Agora podes:</p>
+                <ul class="checklist">
+                    <li>Aceder de qualquer lugar do mundo</li>
+                    <li>Criar sorteios normalmente</li>
+                    <li>Partilhar links por WhatsApp</li>
+                    <li>Os links funcionam para toda a gente</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-card" style="border-left-color: #ffc107;">
+            <div class="step-title" style="color: #f57f17;">⚡ Notas Importantes</div>
+            <div class="step-content">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker" style="background: #ffc107;">💤</div>
+                        <div class="timeline-content">
+                            <strong>Hibernação (Free Plan)</strong>
+                            <p>A app dorme se ninguém aceder 15 min. Acorda em ~10 seg quando alguém entra. É normal!</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker" style="background: #4caf50;">💾</div>
+                        <div class="timeline-content">
+                            <strong>Dados Persistem</strong>
+                            <p>Os sorteios ficam guardados no servidor. Não desaparecem.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker" style="background: #2196f3;">🔄</div>
+                        <div class="timeline-content">
+                            <strong>Atualizações Automáticas</strong>
+                            <p>Quando mexes no código e fazes push para GitHub, Render faz deploy automaticamente.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker" style="background: #667eea;">🎁</div>
+                        <div class="timeline-content">
+                            <strong>Para Secret Santa é Perfeito</strong>
+                            <p>Hibernação não é problema. Só ativa quando alguém quer ver os resultados!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-card" style="background: #f5f5f5; border-left-color: #333;">
+            <div class="step-title">❓ Precisa de Ajuda?</div>
+            <div class="step-content">
+                <p>Se ficares preso em algum passo:</p>
+                <ul class="checklist">
+                    <li>Lê o ficheiro <code style="background: white; padding: 2px 5px;">DEPLOY.md</code> na pasta do projeto</li>
+                    <li>Verifica os logs no Render Dashboard</li>
+                    <li>Tenta "Manual Deploy" se algo correr mal</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🎉 <strong>Está pronto!</strong> Segue os passos acima e em 5 min tens o Amigão online.</p>
+            <p style="margin-top: 10px; font-size: 14px;">Desenvolvido com ❤️ por Jaime Soares Mascarenhas</p>
+        </div>
+    </div>
+</body>
+</html>
