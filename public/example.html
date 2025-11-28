@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amigão - Exemplo de Resultado</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .example-container {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .title {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        .flow-diagram {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .flow-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .step-description {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .step-code {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-top: 10px;
+            overflow-x: auto;
+        }
+
+        .demo-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .demo-section {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .demo-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .demo-content {
+            padding: 20px;
+        }
+
+        .link-example {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            word-break: break-all;
+            color: #333;
+            border-left: 3px solid #25d366;
+        }
+
+        .message-preview {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 3px solid #25d366;
+        }
+
+        .message-text {
+            color: #1b5e20;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .result-preview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .result-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .result-drawn {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .result-value {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+
+        .info-icon {
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .demo-sections {
+                grid-template-columns: 1fr;
+            }
+
+            .title {
+                font-size: 20px;
+            }
+        }
+
+        .note {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #1565c0;
+        }
+
+        .check {
+            color: #4caf50;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="example-container">
+        <div class="title">🎁 Sistema de Resultados Individuais - Amigão</div>
+
+        <div class="flow-diagram">
+            <h2 style="margin-bottom: 20px; color: #333;">Como Funciona o Novo Sistema</h2>
+
+            <div class="flow-step">
+                <div class="step-number">1️⃣</div>
+                <div class="step-content">
+                    <div class="step-title">Crias um Sorteio</div>
+                    <div class="step-description">Crias um novo sorteio com participantes e restrições</div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">2️⃣</div>
+                <div class="step-content">
+                    <div class="step-title">Fazes o Sorteio</div>
+                    <div class="step-description">O sistema faz o sorteio com o algoritmo Fisher-Yates + validações</div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">3️⃣</div>
+                <div class="step-content">
+                    <div class="step-title">Gera Tokens Únicos</div>
+                    <div class="step-description">Cada participante recebe um token único para aceder APENAS ao seu resultado</div>
+                    <div class="step-code">Token: a3b5c7d9e1f2g4h6i8j0k2</div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">4️⃣</div>
+                <div class="step-content">
+                    <div class="step-title">Envia Link Único no WhatsApp</div>
+                    <div class="step-description">Cada pessoa recebe um link personalizado que só funciona com seu token</div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="step-number">5️⃣</div>
+                <div class="step-content">
+                    <div class="step-title">Clica e Vê Todos os Resultados</div>
+                    <div class="step-description">Quando clica no link, vê todos os resultados do sorteio de forma bonita e organizada ✨</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <span class="info-icon">ℹ️</span>
+            <strong>Segurança & Transparência:</strong> O token permite validação (apenas com token = acesso autorizado). Uma vez dentro, TODOS veem os mesmos resultados completos!
+        </div>
+
+        <div class="demo-sections">
+            <div class="demo-section">
+                <div class="demo-header">📱 WhatsApp Link Enviado</div>
+                <div class="demo-content">
+                    <div class="message-preview">
+                        <div class="message-text">
+                            <strong>Mensagem enviada para João:</strong><br><br>
+                            🎁 <strong>Amigão</strong> 🎁<br><br>
+                            Olá João!<br><br>
+                            Clica no link abaixo para ver os resultados do sorteio de <strong>Secret Santa 2025</strong>:<br><br>
+                            <span style="color: #1976d2; word-break: break-all; font-size: 11px;">
+                                https://amigao.onrender.com/resultado.html?drawing=sort-123&token=a3b5c7d9e1f2g4h6
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="step-title">Link Completo:</div>
+                    <div class="link-example">
+https://amigao.onrender.com/resultado.html?drawing=sort-123&token=a3b5c7d9e1f2g4h6
+                    </div>
+
+                    <div class="note">
+                        <strong>Nota:</strong> O token permite acesso ao sorteio. <span class="check">TODOS VEEM OS MESMOS RESULTADOS</span>.
+                    </div>
+                </div>
+            </div>
+
+            <div class="demo-section">
+                <div class="demo-header">🎯 O que João Vê ao Clicar</div>
+                <div class="demo-content">
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 15px;">
+                        <div style="font-size: 48px; margin-bottom: 10px;">🎁</div>
+                        <div style="font-size: 18px; margin-bottom: 15px; opacity: 0.9;">Resultado do Sorteio</div>
+                        <div style="font-size: 12px; opacity: 0.9; margin-bottom: 20px;">
+                            Sorteio: <strong>Secret Santa 2025</strong>
+                        </div>
+                    </div>
+
+                    <div style="background: #e3f2fd; border-left: 4px solid #2196f3; color: #1565c0; padding: 15px; border-radius: 5px; font-size: 13px; margin-bottom: 15px;">
+                        ℹ️ <strong>Todos os Resultados:</strong> Aqui está a lista completa de quem tirou quem neste sorteio!
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 13px; opacity: 0.8; margin-bottom: 8px;">👤 João</div>
+                            <div style="font-size: 16px;">⬇️</div>
+                            <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">🎁 Maria</div>
+                            <div style="font-size: 12px; opacity: 0.8;">Máx: €50</div>
+                        </div>
+
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 13px; opacity: 0.8; margin-bottom: 8px;">👤 Maria</div>
+                            <div style="font-size: 16px;">⬇️</div>
+                            <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">🎁 Pedro</div>
+                            <div style="font-size: 12px; opacity: 0.8;">Máx: €50</div>
+                        </div>
+
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 13px; opacity: 0.8; margin-bottom: 8px;">👤 Pedro</div>
+                            <div style="font-size: 16px;">⬇️</div>
+                            <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">🎁 João</div>
+                            <div style="font-size: 12px; opacity: 0.8;">Máx: €50</div>
+                        </div>
+
+                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 13px; opacity: 0.8; margin-bottom: 8px;">👤 Ana</div>
+                            <div style="font-size: 16px;">⬇️</div>
+                            <div style="font-size: 18px; font-weight: bold; margin-bottom: 8px;">🎁 Paulo</div>
+                            <div style="font-size: 12px; opacity: 0.8;">Máx: €50</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 15px; font-size: 11px; color: #999; text-align: center;">
+                        💝 Amigão v1.0.0<br>
+                        Desenvolvido por Jaime Soares Mascarenhas
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-diagram" style="margin-top: 30px;">
+            <h2 style="margin-bottom: 20px; color: #333;">✨ Vantagens deste Sistema</h2>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div style="padding: 15px; background: #e8f5e9; border-radius: 8px; border-left: 3px solid #4caf50;">
+                    <strong style="color: #2e7d32;">✅ Segurança</strong>
+                    <div style="color: #558b2f; font-size: 13px; margin-top: 5px;">
+                        Cada pessoa vê APENAS o seu resultado
+                    </div>
+                </div>
+
+                <div style="padding: 15px; background: #e3f2fd; border-radius: 8px; border-left: 3px solid #2196f3;">
+                    <strong style="color: #1565c0;">✅ Transparência Total</strong>
+                    <div style="color: #1565c0; font-size: 13px; margin-top: 5px;">
+                        Todos veem todos os resultados
+                    </div>
+                </div>
+
+                <div style="padding: 15px; background: #f3e5f5; border-radius: 8px; border-left: 3px solid #7b1fa2;">
+                    <strong style="color: #4a148c;">✅ Automático</strong>
+                    <div style="color: #6a1b9a; font-size: 13px; margin-top: 5px;">
+                        Gera os links automaticamente
+                    </div>
+                </div>
+
+                <div style="padding: 15px; background: #fff3e0; border-radius: 8px; border-left: 3px solid #f57c00;">
+                    <strong style="color: #e65100;">✅ Bonito</strong>
+                    <div style="color: #e65100; font-size: 13px; margin-top: 5px;">
+                        Interface moderna e responsiva
+                    </div>
+                </div>
+
+                <div style="padding: 15px; background: #fce4ec; border-radius: 8px; border-left: 3px solid #c2185b;">
+                    <strong style="color: #880e4f;">✅ Compartilhável</strong>
+                    <div style="color: #b71c1c; font-size: 13px; margin-top: 5px;">
+                        Partilha o link pelo WhatsApp
+                    </div>
+                </div>
+
+                <div style="padding: 15px; background: #e0f2f1; border-radius: 8px; border-left: 3px solid #00796b;">
+                    <strong style="color: #004d40;">✅ Reutilizável</strong>
+                    <div style="color: #00695c; font-size: 13px; margin-top: 5px;">
+                        Funciona por sempre (token = permanente)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-diagram" style="margin-top: 30px;">
+            <h2 style="margin-bottom: 20px; color: #333;">🔧 Exemplo Técnico</h2>
+
+            <div class="step-code" style="margin-bottom: 15px;">
+// Quando cria o sorteio, cada resultado tem:
+{
+  from: "João",
+  to: "Maria",
+  fromPhone: "+351912345678",
+  maxValue: 50,
+  token: "a3b5c7d9e1f2g4h6",
+  restrictions: [...]
+}
+
+// Quando João clica:
+GET /resultado.html?drawing=sort-123&token=a3b5c7d9e1f2g4h6
+
+// Backend verifica:
+✓ Token existe?
+✓ Token corresponde ao sorteio?
+✓ Retorna APENAS o resultado de João
+            </div>
+
+            <div class="note">
+                <strong>Implementação Completa:</strong> Já está tudo implementado! Os links são gerados automaticamente quando fazes o sorteio.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎅 Amigão - Sorteio de Amigo Secreto</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1>🎅 Amigão 🎁</h1>
+      <p>Organiza os teus sorteios de forma fácil e divertida</p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Menu Principal -->
+      <div id="menuPage" class="page">
+        <section class="section menu-section">
+          <h2>O que queres fazer?</h2>
+          
+          <div class="menu-buttons">
+            <button onclick="showCreateDrawingForm()" class="btn btn-primary btn-large menu-btn">
+              ➕ Criar Novo Sorteio
+            </button>
+            <button onclick="loadDrawings()" class="btn btn-secondary btn-large menu-btn">
+              📋 Ver Sorteios Criados
+            </button>
+          </div>
+        </section>
+      </div>
+
+      <!-- Lista de Sorteios -->
+      <div id="drawingsListPage" class="page hidden">
+        <div class="page-header">
+          <button onclick="backToMenu()" class="btn btn-secondary btn-small">← Voltar</button>
+          <h2>Meus Sorteios</h2>
+        </div>
+
+        <div id="drawingsList" class="drawings-grid">
+          <p class="empty-state">Carregando sorteios...</p>
+        </div>
+      </div>
+
+      <!-- Formulário Criar Sorteio -->
+      <div id="createDrawingPage" class="page hidden">
+        <div class="page-header">
+          <button onclick="backToMenu()" class="btn btn-secondary btn-small">← Voltar</button>
+          <h2>Criar Novo Sorteio</h2>
+        </div>
+
+        <section class="section">
+          <form onsubmit="submitCreateDrawing(event)" class="form">
+            <div class="form-group">
+              <label for="drawingName">Nome do Sorteio</label>
+              <input type="text" id="drawingName" placeholder="Ex: Natal 2025, Amigo Secreto Trabalho..." required class="input">
+            </div>
+
+            <div class="form-group">
+              <label for="drawingMaxValue">Valor Máximo da Prenda (€)</label>
+              <input type="number" id="drawingMaxValue" placeholder="Ex: 50" min="1" step="0.01" required class="input">
+            </div>
+
+            <button type="submit" class="btn btn-success btn-large">
+              ✓ Criar Sorteio
+            </button>
+          </form>
+        </section>
+      </div>
+
+      <!-- Página do Sorteio (Edição) -->
+      <div id="drawingEditorPage" class="page hidden">
+        <div class="page-header">
+          <button onclick="backToDrawingsList()" class="btn btn-secondary btn-small">← Voltar</button>
+          <h2 id="drawingTitle">Sorteio</h2>
+        </div>
+
+        <!-- Info do Sorteio -->
+        <section class="section drawing-info">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Nome:</span>
+              <span class="value" id="infoName">-</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Valor Máximo:</span>
+              <span class="value" id="infoMaxValue">-</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Participantes:</span>
+              <span class="value" id="infoParticipants">0</span>
+            </div>
+            <div class="info-item">
+              <span class="label">Criado:</span>
+              <span class="value" id="infoCreated">-</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Seção de Participantes -->
+        <section class="section participants-section">
+          <h3>Adicionar Participantes</h3>
+          
+          <div class="form-group">
+            <input type="text" id="participantName" placeholder="Nome do participante" class="input">
+            <input type="tel" id="participantPhone" placeholder="Telefone (ex: +351912345678 ou 912345678)" class="input">
+            <button onclick="addParticipantToDrawing()" class="btn btn-primary">Adicionar</button>
+          </div>
+
+          <!-- Lista de Participantes -->
+          <div class="participants-list">
+            <h4>Participantes (<span id="participantCount">0</span>)</h4>
+            <div id="participantsList" class="list">
+              <p class="empty-state">Nenhum participante adicionado ainda</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Seção de Restrições -->
+        <section class="section restrictions-section">
+          <h3>Restrições (Opcional)</h3>
+          <p class="help-text">Define pessoas que não podem tirar uma à outra</p>
+          
+          <div class="form-group">
+            <select id="restrictionFrom" class="input">
+              <option value="">Seleciona quem NÃO pode tirar:</option>
+            </select>
+            <select id="restrictionTo" class="input">
+              <option value="">Seleciona quem não pode ser tirado:</option>
+            </select>
+            <button onclick="addRestrictionToDrawing()" class="btn btn-secondary">Adicionar Restrição</button>
+          </div>
+
+          <!-- Lista de Restrições -->
+          <div id="restrictionsList" class="list">
+            <p class="empty-state">Sem restrições</p>
+          </div>
+        </section>
+
+        <!-- Seção de Sorteio -->
+        <section class="section drawing-section">
+          <h3>Executar Sorteio</h3>
+          
+          <div class="drawing-actions">
+            <button onclick="executeDrawing()" class="btn btn-success btn-large" id="drawBtn">
+              🎲 Fazer Sorteio
+            </button>
+            <button onclick="toggleResultsView()" class="btn btn-info btn-large" id="viewResultsBtn" style="display: none;">
+              👁️ Ver Resultados
+            </button>
+          </div>
+
+          <!-- Ações Intermediárias (Entre Sorteio e Resultados) -->
+          <div id="intermediateActions" class="intermediate-actions hidden">
+            <button onclick="sendViaWhatsApp()" class="btn btn-primary btn-large">
+              💬 Enviar por WhatsApp
+            </button>
+            <button onclick="downloadResults()" class="btn btn-secondary btn-large">
+              📥 Descarregar Resultados
+            </button>
+            <button onclick="resetDrawing()" class="btn btn-danger btn-large">
+              🔄 Novo Sorteio
+            </button>
+          </div>
+
+          <!-- Resultados (Ocultos por padrão) -->
+          <div id="resultsContainer" class="results-container hidden">
+            <div class="results-header">
+              <h4>Resultados do Sorteio</h4>
+              <button onclick="toggleResultsView()" class="btn btn-secondary btn-small">✕ Fechar</button>
+            </div>
+            <div id="resultsList" class="results-list">
+              <!-- Os resultados aparecem aqui -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Ações do Sorteio -->
+        <section class="section actions-section">
+          <button onclick="deleteDrawing()" class="btn btn-danger">
+            🗑️ Deletar Sorteio
+          </button>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Amigão v1.0.0 | Desenvolvido por Jaime Soares Mascarenhas | © 2025</p>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="script.js"></script>
+</body>
+</html>
