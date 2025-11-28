@@ -1,6 +1,7 @@
 // Estado da aplicação
 let currentDrawing = null;
 let drawings = [];
+let currentEditToken = null; // Token de edição do sorteio atual
 
 // API Base URL
 const API_URL = '/api';
@@ -11,6 +12,31 @@ const APP_INFO = {
   version: '1.0.0',
   developer: 'Jaime Soares Mascarenhas'
 };
+
+// LocalStorage keys para armazenar tokens
+const STORAGE_KEY_TOKENS = 'amigao_edit_tokens'; // { drawingId: token }
+
+// Carregar tokens guardados
+function loadSavedTokens() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY_TOKENS)) || {};
+  } catch {
+    return {};
+  }
+}
+
+// Guardar token de um sorteio
+function saveEditToken(drawingId, token) {
+  const tokens = loadSavedTokens();
+  tokens[drawingId] = token;
+  localStorage.setItem(STORAGE_KEY_TOKENS, JSON.stringify(tokens));
+}
+
+// Recuperar token de um sorteio
+function getEditToken(drawingId) {
+  const tokens = loadSavedTokens();
+  return tokens[drawingId];
+}
 
 // ============================================
 // UTILITÁRIOS
@@ -111,6 +137,11 @@ async function submitCreateDrawing(event) {
     }
 
     const drawing = await response.json();
+    
+    // ✅ GUARDAR TOKEN DE EDIÇÃO PRIVADO
+    saveEditToken(drawing.id, drawing.editToken);
+    currentEditToken = drawing.editToken;
+    
     currentDrawing = drawing;
     showMessage(`Sorteio "${name}" criado com sucesso!`, 'success');
     
@@ -126,12 +157,18 @@ async function submitCreateDrawing(event) {
 
 async function loadDrawings() {
   try {
-    const response = await fetch(`${API_URL}/drawings`);
-    if (!response.ok) throw new Error('Erro ao carregar sorteios');
-
-    drawings = await response.json();
-    displayDrawingsList();
+    // ✅ PRIVACIDADE: A API não retorna mais lista de sorteios
+    // Todos os sorteios são privados - apenas visíveis com token
     showPage('drawingsListPage');
+    
+    const list = document.getElementById('drawingsList');
+    list.innerHTML = `
+      <div class="empty-state">
+        <p>🔐 Todos os sorteios são PRIVADOS!</p>
+        <p>Para recuperar um sorteio anterior, precisas do link ou do token de edição que recebeste ao criar.</p>
+        <p style="margin-top: 20px; font-weight: bold; color: #667eea;">💡 Cria um novo sorteio para começar!</p>
+      </div>
+    `;
   } catch (error) {
     console.error('Erro:', error);
     showMessage('Erro ao carregar sorteios', 'error');
@@ -140,48 +177,31 @@ async function loadDrawings() {
 }
 
 function displayDrawingsList() {
-  const list = document.getElementById('drawingsList');
-
-  if (drawings.length === 0) {
-    list.innerHTML = '<p class="empty-state">Nenhum sorteio criado ainda. Começa a criar um!</p>';
-    return;
-  }
-
-  list.innerHTML = drawings.map(drawing => {
-    const createdDate = new Date(drawing.createdAt).toLocaleDateString('pt-PT');
-    const participantsCount = drawing.participants.length;
-    const hasResult = drawing.result && drawing.result.length > 0;
-
-    return `
-      <div class="drawing-card">
-        <div class="drawing-card-title">${drawing.name}</div>
-        <div class="drawing-card-info">
-          <span>💰 Máx: ${drawing.maxValue}€</span>
-          <span>👥 ${participantsCount} participantes</span>
-        </div>
-        <div class="drawing-card-info">
-          <span>📅 ${createdDate}</span>
-          ${hasResult ? '<span style="color: #16a085;">✓ Sorteado</span>' : ''}
-        </div>
-        <div class="drawing-card-buttons">
-          <button onclick="openDrawing('${drawing.id}')" class="btn btn-primary btn-small">
-            ✏️ Editar
-          </button>
-          <button onclick="deleteDrawing('${drawing.id}')" class="btn btn-danger btn-small">
-            🗑️ Deletar
-          </button>
-        </div>
-      </div>
-    `;
-  }).join('');
+  // Esta função não é mais usada - sorteios são privados
 }
 
 async function openDrawing(drawingId) {
   try {
-    const response = await fetch(`${API_URL}/drawings/${drawingId}`);
-    if (!response.ok) throw new Error('Sorteio não encontrado');
+    // ✅ RECUPERAR EDIT TOKEN DO ARMAZENAMENTO LOCAL
+    const editToken = getEditToken(drawingId);
+    
+    if (!editToken) {
+      showMessage('Token de edição não encontrado. O sorteio é privado.', 'error');
+      return;
+    }
+    
+    const response = await fetch(`${API_URL}/drawings/${drawingId}?editToken=${editToken}`);
+    if (!response.ok) {
+      if (response.status === 403) {
+        showMessage('Acesso negado. Token inválido ou sorteio não encontrado.', 'error');
+      } else {
+        showMessage('Sorteio não encontrado ou acesso recusado', 'error');
+      }
+      return;
+    }
 
     currentDrawing = await response.json();
+    currentEditToken = editToken; // Guardar token atual
     displayDrawingEditor();
     showPage('drawingEditorPage');
   } catch (error) {
@@ -232,7 +252,17 @@ async function deleteDrawing(drawingId) {
   if (!confirm('Tens a certeza que queres deletar este sorteio?')) return;
 
   try {
-    const response = await fetch(`${API_URL}/drawings/${drawingId}`, { method: 'DELETE' });
+    const editToken = getEditToken(drawingId);
+    if (!editToken) {
+      showMessage('Token não encontrado', 'error');
+      return;
+    }
+
+    const response = await fetch(`${API_URL}/drawings/${drawingId}`, { 
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ editToken })
+    });
     if (!response.ok) throw new Error('Erro ao deletar');
 
     showMessage('Sorteio deletado', 'success');
@@ -264,7 +294,7 @@ async function addParticipantToDrawing() {
     const response = await fetch(`${API_URL}/drawings/${currentDrawing.id}/participants`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, phone })
+      body: JSON.stringify({ name, phone, editToken: currentEditToken })
     });
 
     if (!response.ok) {
@@ -369,7 +399,7 @@ async function addRestrictionToDrawing() {
     const response = await fetch(`${API_URL}/drawings/${currentDrawing.id}/restrictions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ from, to })
+      body: JSON.stringify({ from, to, editToken: currentEditToken })
     });
 
     if (!response.ok) {
@@ -460,7 +490,7 @@ async function executeDrawing() {
       const response = await fetch(`${API_URL}/drawings/${currentDrawing.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ result: drawing.result })
+        body: JSON.stringify({ result: drawing.result, editToken: currentEditToken })
       });
 
       if (response.ok) {

@@ -55,8 +55,12 @@ class DrawingsStore {
   static create(name, maxValue) {
     const drawings = this.loadAll();
     
+    // Gerar token único de edição
+    const editToken = this.generateSecureToken();
+    
     const newDrawing = {
       id: Date.now().toString(),
+      editToken, // Token privado para edição
       name,
       maxValue,
       participants: [],
@@ -166,6 +170,27 @@ class DrawingsStore {
     const filtered = drawings.filter(d => d.id !== id);
     this.saveAll(filtered);
     return true;
+  }
+
+  /**
+   * Gera um token seguro e aleatório
+   */
+  static generateSecureToken() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let token = '';
+    for (let i = 0; i < 32; i++) {
+      token += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return token;
+  }
+
+  /**
+   * Valida o token de edição de um sorteio
+   */
+  static validateEditToken(id, token) {
+    const drawing = this.getById(id);
+    if (!drawing) return false;
+    return drawing.editToken === token;
   }
 }
 
