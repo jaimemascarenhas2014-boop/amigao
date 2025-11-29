@@ -835,8 +835,47 @@ document.addEventListener('DOMContentLoaded', () => {
   if (footerEl) {
     footerEl.textContent = `🎄 Amigão v${APP_INFO.version} 🎄 | Desenvolvido por ${APP_INFO.developer} ✨ | © 2025 ❤️ 💚`;
   }
-  showPage('menuPage');
+  
+  // Verificar se há sorteio na URL para acesso direto
+  const params = new URLSearchParams(window.location.search);
+  const drawingId = params.get('drawing');
+  const token = params.get('token');
+  
+  if (drawingId && token) {
+    // Guardar token se for fornecido na URL
+    saveEditToken(drawingId, token);
+    currentEditToken = token;
+    
+    // Carregar o sorteio diretamente
+    loadDrawingFromUrl(drawingId, token);
+  } else {
+    showPage('menuPage');
+  }
 });
+
+async function loadDrawingFromUrl(drawingId, token) {
+  try {
+    const response = await fetch(`${API_URL}/drawings/${drawingId}?editToken=${token}`);
+    
+    if (!response.ok) {
+      showMessage('❌ Link inválido ou sorteio não encontrado', 'error');
+      showPage('menuPage');
+      return;
+    }
+    
+    const drawing = await response.json();
+    currentDrawing = drawing;
+    currentEditToken = token;
+    
+    // Mostrar a página do sorteio
+    showPage('drawingPage');
+    showMessage('✓ Sorteio carregado com sucesso!', 'success');
+  } catch (error) {
+    console.error('Erro ao carregar sorteio:', error);
+    showMessage('❌ Erro ao carregar sorteio', 'error');
+    showPage('menuPage');
+  }
+}
 
 function showOrganizerAccessLink() {
   if (!currentDrawing) return;
