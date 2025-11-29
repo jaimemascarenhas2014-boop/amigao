@@ -264,6 +264,13 @@
         // FIM MODAL DO PROGRAMADOR
         // ============================================
 
+        // Função escapeHtml definida aqui ANTES de ser usada
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         async function loadResult() {
             const drawingId = new URLSearchParams(window.location.search).get('drawing');
             const token = new URLSearchParams(window.location.search).get('token');
@@ -376,12 +383,6 @@
                     <p>${escapeHtml(message)}</p>
                 </div>
             `;
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
         }
 
         // Carregar resultado quando página carrega
