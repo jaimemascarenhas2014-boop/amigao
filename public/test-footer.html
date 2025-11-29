@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste Footer</title>
+    <style>
+        body { font-family: Arial; background: #667eea; color: white; padding: 40px; }
+        .container { background: white; color: #333; padding: 40px; border-radius: 10px; }
+        .footer { background: #1a1a2e; color: white; padding: 20px; border-radius: 5px; margin-top: 20px; }
+        button { cursor: pointer; font-size: 1.2em; padding: 5px 10px; background: #667eea; color: white; border: none; border-radius: 5px; }
+        button:hover { background: #764ba2; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎅 Teste Footer Amigão 🎄</h1>
+        <p>Este é o footer que deve aparecer:</p>
+        
+        <div class="footer">
+            <p>🎄 Amigão v1.2.7 🎄 | Desenvolvido por Jaime Soares Mascarenhas <button onclick="alert('Modal deve abrir aqui!')">👤</button> ✨ | © 2025 ❤️ 💚</p>
+        </div>
+        
+        <h2>Teste do Botão:</h2>
+        <button onclick="openDeveloperModal()">Clica aqui para testar o botão 👤</button>
+        
+        <div id="developerModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; padding: 30px; max-width: 500px; width: 90%; position: relative; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4); display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                <button onclick="closeDeveloperModal()" style="position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.2); border: none; color: white; font-size: 28px; cursor: pointer; width: 40px; height: 40px; border-radius: 50%;">✕</button>
+                <img src="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 400 500%22%3E%3Cdefs%3E%3Cstyle%3E.dev-bg%7Bfill:%23e8f4f8%7D.dev-grid%7Bstroke:%2390c9d6;stroke-width:2;fill:none%7D.dev-person%7Bfill:%23daa55c%7D.dev-hair%7Bfill:%234a3c2a%7D.dev-glasses%7Bfill:none;stroke:%23333;stroke-width:3%7D.dev-mouth%7Bfill:none;stroke:%23333;stroke-width:2%7D%3C/style%3E%3C/defs%3E%3Crect class=%22dev-bg%22 width=%22400%22 height=%22500%22/%3E%3Cg class=%22dev-grid%22%3E%3Cline x1=%220%22 y1=%22100%22 x2=%22400%22 y2=%22100%22/%3E%3Cline x1=%220%22 y1=%22200%22 x2=%22400%22 y2=%22200%22/%3E%3Cline x1=%220%22 y1=%22300%22 x2=%22400%22 y2=%22300%22/%3E%3Cline x1=%220%22 y1=%22400%22 x2=%22400%22 y2=%22400%22/%3E%3Cline x1=%22100%22 y1=%220%22 x2=%22100%22 y2=%22500%22/%3E%3Cline x1=%22200%22 y1=%220%22 x2=%22200%22 y2=%22500%22/%3E%3Cline x1=%22300%22 y1=%220%22 x2=%22300%22 y2=%22500%22/%3E%3C/g%3E%3Crect class=%22dev-person%22 x=%22120%22 y=%22200%22 width=%22160%22 height=%22200%22 rx=%2210%22/%3E%3Ccircle class=%22dev-person%22 cx=%22200%22 cy=%22120%22 r=%2270%22/%3E%3Cg class=%22dev-hair%22%3E%3Cpath d=%22M 150 70 Q 140 50 160 40 Q 180 30 200 30 Q 220 30 240 40 Q 260 50 250 70 Z%22/%3E%3Ccircle cx=%22160%22 cy=%2255%22 r=%228%22/%3E%3Ccircle cx=%22240%22 cy=%2255%22 r=%228%22/%3E%3C/g%3E%3Ccircle cx=%22170%22 cy=%22100%22 r=%2225%22 class=%22dev-glasses%22/%3E%3Ccircle cx=%22230%22 cy=%22100%22 r=%2225%22 class=%22dev-glasses%22/%3E%3Cline x1=%22195%22 y1=%22100%22 x2=%22205%22 y2=%22100%22 class=%22dev-glasses%22/%3E%3Ccircle cx=%22200%22 cy=%22135%22 r=%225%22 fill=%22%23333%22/%3E%3Cpath d=%22M 190 160 Q 200 170 210 160%22 class=%22dev-mouth%22/%3E%3Crect x=%22140%22 y=%22210%22 width=%2250%22 height=%2280%22 rx=%225%22 fill=%22%23c84040%22/%3E%3Crect x=%22210%22 y=%22210%22 width=%2250%22 height=%2280%22 rx=%225%22 fill=%22%23c84040%22/%3E%3Crect x=%22145%22 y=%22290%22 width=%2235%22 height=%22100%22 fill=%22%23daa55c%22/%3E%3Crect x=%22220%22 y=%22290%22 width=%2235%22 height=%22100%22 fill=%23daa55c%22/%3E%3C/svg%3E" alt="Jaime Soares Mascarenhas" style="width: 200px; height: 250px; border-radius: 15px; border: 4px solid rgba(255, 255, 255, 0.3); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);">
+                <div style="text-align: center;">
+                    <h3 style="color: white; margin: 0; font-size: 24px; font-weight: bold;">🏆 Jaime Soares Mascarenhas</h3>
+                    <p style="color: rgba(255, 255, 255, 0.9); margin: 5px 0; font-size: 16px;">💻 Full-Stack Developer</p>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            function openDeveloperModal() {
+                document.getElementById('developerModal').style.display = 'flex';
+            }
+            function closeDeveloperModal() {
+                document.getElementById('developerModal').style.display = 'none';
+            }
+        </script>
+    </div>
+</body>
+</html>
