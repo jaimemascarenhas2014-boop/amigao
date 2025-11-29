@@ -125,7 +125,7 @@ router.post('/generate-link', (req, res) => {
   // Data atual
   const today = new Date().toLocaleDateString('pt-PT');
 
-  const message = `🎅 *Amigão* 🎁%0A%0AOlá ${from}!%0A%0ATiraste: *${to}*%0A%0AValor máximo: ${maxValue || 'Sem limite'} €%0A%0A----%0A*Amigão* v1.0.0%0ADesenvolvido por Jaime Soares Mascarenhas%0AData: ${today}%0A© 2025%0A%0ABoa sorte! 🎉`;
+  const message = `🎅 *Amigão* 🎁%0A%0AOlá ${from}!%0A%0ATiraste: *${to}*%0A%0AValor máximo: ${maxValue || 'Sem limite'} €%0ANão sejas forreta ${from}!!!%0A%0A----%0A*Amigão* v1.0.0%0ADesenvolvido por Jaime Soares Mascarenhas%0AData: ${today}%0A© 2025%0A%0AVê o teu resultado aqui:%0Ahttps://amigao.onrender.com/%0A%0ABoa sorte! 🎉`;
   
   const link = `https://wa.me/${phone}?text=${message}`;
 
