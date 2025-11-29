@@ -9,7 +9,7 @@ const API_URL = '/api';
 // App Info
 const APP_INFO = {
   name: 'Amigão',
-  version: '1.2.1',
+  version: '1.2.2',
   developer: 'Jaime Soares Mascarenhas'
 };
 
