@@ -342,7 +342,11 @@ async function removeParticipantFromDrawing(participantId) {
 
   try {
     const response = await fetch(`${API_URL}/drawings/${currentDrawing.id}/participants/${participantId}`, 
-      { method: 'DELETE' });
+      { 
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ editToken: currentEditToken })
+      });
 
     if (!response.ok) throw new Error('Erro ao remover');
 
@@ -446,7 +450,11 @@ async function removeRestrictionFromDrawing(restrictionId) {
 
   try {
     const response = await fetch(`${API_URL}/drawings/${currentDrawing.id}/restrictions/${restrictionId}`, 
-      { method: 'DELETE' });
+      { 
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ editToken: currentEditToken })
+      });
 
     if (!response.ok) throw new Error('Erro ao remover');
 
