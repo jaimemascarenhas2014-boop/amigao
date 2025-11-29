@@ -47,6 +47,29 @@ app.get('/', (req, res) => {
   });
 });
 
+// Serve resultado.html with force refresh
+app.get('/resultado.html', (req, res) => {
+  // Disable caching completely
+  res.set('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
+  res.set('ETag', 'W/"' + Date.now() + '"'); // Unique ETag for each request
+  
+  // Send the file with fresh content
+  const fs = require('fs');
+  const path = require('path');
+  const filePath = path.join(__dirname, 'public', 'resultado.html');
+  
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).send('Erro ao carregar página');
+      return;
+    }
+    res.set('Content-Type', 'text/html; charset=utf-8');
+    res.send(data);
+  });
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
