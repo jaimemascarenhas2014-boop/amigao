@@ -13,6 +13,37 @@ const APP_INFO = {
   developer: 'Jaime Soares Mascarenhas'
 };
 
+// ============================================
+// MODAL DO PROGRAMADOR
+// ============================================
+
+function openDeveloperModal() {
+  const modal = document.getElementById('developerModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeDeveloperModal() {
+  const modal = document.getElementById('developerModal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  }
+}
+
+// Fechar modal com tecla ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeDeveloperModal();
+  }
+});
+
+// ============================================
+// FIM MODAL DO PROGRAMADOR
+// ============================================
+
 // LocalStorage keys para armazenar tokens
 const STORAGE_KEY_TOKENS = 'amigao_edit_tokens'; // { drawingId: token }
 

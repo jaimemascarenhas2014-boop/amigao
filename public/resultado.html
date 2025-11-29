@@ -202,6 +202,37 @@
     </div>
 
     <script>
+        // ============================================
+        // MODAL DO PROGRAMADOR
+        // ============================================
+
+        function openDeveloperModal() {
+          const modal = document.getElementById('developerModal');
+          if (modal) {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+          }
+        }
+
+        function closeDeveloperModal() {
+          const modal = document.getElementById('developerModal');
+          if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+          }
+        }
+
+        // Fechar modal com tecla ESC
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            closeDeveloperModal();
+          }
+        });
+
+        // ============================================
+        // FIM MODAL DO PROGRAMADOR
+        // ============================================
+
         async function loadResult() {
             const drawingId = new URLSearchParams(window.location.search).get('drawing');
             const token = new URLSearchParams(window.location.search).get('token');
@@ -256,7 +287,7 @@
 
                     <div class="footer">
                         <div class="footer-text">💝 Amigão v1.2.1</div>
-                        <div class="footer-text">Desenvolvido por Jaime Soares Mascarenhas</div>
+                        <div class="footer-text">Desenvolvido por <a href="javascript:void(0)" onclick="openDeveloperModal()" style="cursor: pointer; color: #fff; text-decoration: underline;" title="Clica para ver o programador">Jaime Soares Mascarenhas</a></div>
                         <div class="footer-text" style="margin-top: 10px; font-size: 0.85em;">
                             💳 Gostaste? <a href="https://www.mbway.pt/" target="_blank" style="color: #FFD700; text-decoration: none; font-weight: bold;" title="Clica para abrir MBWay">Faz um donativo via MBWay: +351 912312938</a> 🙏
                         </div>
@@ -297,7 +328,7 @@
 
                 <div class="footer">
                     <div class="footer-text">💝 Amigão v1.2.1</div>
-                    <div class="footer-text">Desenvolvido por Jaime Soares Mascarenhas</div>
+                    <div class="footer-text">Desenvolvido por <a href="javascript:void(0)" onclick="openDeveloperModal()" style="cursor: pointer; color: #fff; text-decoration: underline;" title="Clica para ver o programador">Jaime Soares Mascarenhas</a></div>
                     <div class="footer-text" style="margin-top: 10px; font-size: 0.85em;">
                         💳 Gostaste? <a href="https://www.mbway.pt/" target="_blank" style="color: #FFD700; text-decoration: none; font-weight: bold;" title="Clica para abrir MBWay">Faz um donativo via MBWay: +351 912312938</a> 🙏
                     </div>
@@ -325,5 +356,37 @@
         // Carregar resultado quando página carrega
         loadResult();
     </script>
+
+    <!-- Modal do Programador -->
+    <div id="developerModal" class="modal hidden" onclick="if(event.target === this) closeDeveloperModal()" style="position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); justify-content: center; align-items: center; display: none;">
+      <div class="modal-content developer-modal" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; padding: 30px; max-width: 500px; width: 90%; position: relative; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);">
+        <button class="modal-close" onclick="closeDeveloperModal()" style="position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.2); border: none; color: white; font-size: 28px; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">✕</button>
+        <div class="developer-card" style="display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center;">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'%3E%3Cdefs%3E%3Cstyle%3E.dev-bg%7Bfill:%23e8f4f8%7D.dev-grid%7Bstroke:%2390c9d6;stroke-width:2;fill:none%7D.dev-person%7Bfill:%23daa55c%7D.dev-hair%7Bfill:%234a3c2a%7D.dev-glasses%7Bfill:none;stroke:%23333;stroke-width:3%7D.dev-mouth%7Bfill:none;stroke:%23333;stroke-width:2%7D%3C/style%3E%3C/defs%3E%3Crect class='dev-bg' width='400' height='500'/%3E%3Cg class='dev-grid'%3E%3Cline x1='0' y1='100' x2='400' y2='100'/%3E%3Cline x1='0' y1='200' x2='400' y2='200'/%3E%3Cline x1='0' y1='300' x2='400' y2='300'/%3E%3Cline x1='0' y1='400' x2='400' y2='400'/%3E%3Cline x1='100' y1='0' x2='100' y2='500'/%3E%3Cline x1='200' y1='0' x2='200' y2='500'/%3E%3Cline x1='300' y1='0' x2='300' y2='500'/%3E%3C/g%3E%3Crect class='dev-person' x='120' y='200' width='160' height='200' rx='10'/%3E%3Ccircle class='dev-person' cx='200' cy='120' r='70'/%3E%3Cg class='dev-hair'%3E%3Cpath d='M 150 70 Q 140 50 160 40 Q 180 30 200 30 Q 220 30 240 40 Q 260 50 250 70 Z'/%3E%3Ccircle cx='160' cy='55' r='8'/%3E%3Ccircle cx='240' cy='55' r='8'/%3E%3C/g%3E%3Ccircle cx='170' cy='100' r='25' class='dev-glasses'/%3E%3Ccircle cx='230' cy='100' r='25' class='dev-glasses'/%3E%3Cline x1='195' y1='100' x2='205' y2='100' class='dev-glasses'/%3E%3Ccircle cx='200' cy='135' r='5' fill='%23333'/%3E%3Cpath d='M 190 160 Q 200 170 210 160' class='dev-mouth'/%3E%3Crect x='140' y='210' width='50' height='80' rx='5' fill='%23c84040'/%3E%3Crect x='210' y='210' width='50' height='80' rx='5' fill='%23c84040'/%3E%3Crect x='145' y='290' width='35' height='100' fill='%23daa55c'/%3E%3Crect x='220' y='290' width='35' height='100' fill='%23daa55c'/%3E%3C/svg%3E" alt="Jaime Soares Mascarenhas" style="width: 200px; height: 250px; border-radius: 15px; border: 4px solid rgba(255, 255, 255, 0.3); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); object-fit: cover;">
+          <div class="developer-info">
+            <h3 style="color: white; margin: 0; font-size: 24px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);">🏆 Jaime Soares Mascarenhas</h3>
+            <p style="color: rgba(255, 255, 255, 0.9); margin: 5px 0; font-size: 16px; font-weight: 600;">💻 Full-Stack Developer</p>
+            <p style="color: rgba(255, 255, 255, 0.85); margin: 10px 0; font-size: 14px; line-height: 1.5;">Entusiasta de programação e criação de soluções inovadoras para o Natal! 🎄✨</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 15px;">
+              <span style="background: rgba(255, 255, 255, 0.2); color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid rgba(255, 255, 255, 0.4);">Node.js</span>
+              <span style="background: rgba(255, 255, 255, 0.2); color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid rgba(255, 255, 255, 0.4);">Express</span>
+              <span style="background: rgba(255, 255, 255, 0.2); color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid rgba(255, 255, 255, 0.4);">JavaScript</span>
+              <span style="background: rgba(255, 255, 255, 0.2); color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid rgba(255, 255, 255, 0.4);">HTML/CSS</span>
+              <span style="background: rgba(255, 255, 255, 0.2); color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid rgba(255, 255, 255, 0.4);">REST APIs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      #developerModal.hidden {
+        display: none !important;
+      }
+
+      #developerModal:not(.hidden) {
+        display: flex !important;
+      }
+    </style>
 </body>
 </html>
