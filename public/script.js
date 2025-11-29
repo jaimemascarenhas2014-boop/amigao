@@ -521,7 +521,7 @@ async function executeDrawing() {
         document.getElementById('resultsContainer').classList.add('hidden');
         showMessage('Sorteio realizado com sucesso! Clica em "Ver Resultados" para consultar.', 'success');
         
-        showOrganizerResultLink(); // Mostra o link do organizador após o sorteio
+        showOrganizerAccessLink(); // Mostra o link do organizador após o sorteio
       }
     } else {
       showMessage(drawing.error, 'error');
@@ -621,11 +621,7 @@ function displayResults(results) {
     'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
   ];
 
-  list.innerHTML = results.map((result, index) => {
-    const resultId = `result-${index}`;
-    const sentId = `sent-${index}`;
-    const btnId = `btn-${index}`;
-    return `
+  list.innerHTML = results.map((result, index) => `
     <div class="result-card" style="background: ${colors[index % colors.length]}">
       <div class="result-from">👤 ${result.from}</div>
       <div style="text-align: center; margin: 15px 0;">
@@ -633,14 +629,8 @@ function displayResults(results) {
       </div>
       <div class="result-to">🎁 ${result.to}</div>
       <div class="result-value">💰 Valor máximo: ${result.maxValue}€</div>
-      <div style="margin-top: 15px; display: flex; gap: 10px; align-items: center;">
-        <button onclick="sendSingleWhatsApp(${index})" class="btn btn-primary btn-small" id="${btnId}">
-          💬 Enviar WhatsApp
-        </button>
-        <span id="${sentId}" style="display:none; color: #4CAF50; font-weight: bold;">✓ Enviado</span>
-      </div>
     </div>
-  `}).join('');
+  `).join('');
 }
 
 function toggleResultsView() {
@@ -659,32 +649,85 @@ async function sendViaWhatsApp() {
     return;
   }
 
-  const btn = event.target;
+  // Mostrar modal com lista de participantes
+  showParticipantsList();
+}
+
+function showParticipantsList() {
+  if (!currentDrawing || !currentDrawing.result) return;
+  
+  const modal = document.createElement('div');
+  modal.id = 'participantsModal';
+  modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;';
+  
+  const content = document.createElement('div');
+  content.style.cssText = 'background: white; border-radius: 15px; padding: 30px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;';
+  
+  let html = '<h2>📱 Enviar Resultados por WhatsApp</h2><p style="margin-bottom: 20px;">Clica no participante para enviar o link do seu resultado:</p>';
+  
+  currentDrawing.result.forEach((result, index) => {
+    const sentClass = `sent-status-${index}`;
+    html += `
+      <div style="background: #f5f5f5; padding: 15px; margin: 10px 0; border-radius: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong>👤 ${result.from}</strong><br>
+          <small>📱 ${result.fromPhone}</small>
+        </div>
+        <button onclick="sendIndividualWhatsApp(${index}, this)" class="btn btn-primary btn-small">
+          💬 Enviar
+        </button>
+        <span class="${sentClass}" style="display:none; color: #4CAF50; font-weight: bold;">✓</span>
+      </div>
+    `;
+  });
+  
+  html += '<br><button onclick="closeParticipantsModal()" class="btn btn-secondary btn-small">Fechar</button>';
+  
+  content.innerHTML = html;
+  modal.appendChild(content);
+  document.body.appendChild(modal);
+}
+
+function closeParticipantsModal() {
+  const modal = document.getElementById('participantsModal');
+  if (modal) modal.remove();
+}
+
+async function sendIndividualWhatsApp(index, btn) {
+  if (!currentDrawing || !currentDrawing.result || currentDrawing.result.length === 0) {
+    showMessage('Nenhum sorteio para enviar', 'error');
+    return;
+  }
+
+  const result = currentDrawing.result[index];
+  if (!result) return;
+  
   btn.disabled = true;
 
   try {
-    for (const result of currentDrawing.result) {
-      // Gerar link direto para o resultado individual
-      const baseUrl = window.location.origin;
-      const resultLink = `${baseUrl}/resultado.html?drawing=${currentDrawing.id}&token=${result.token}`;
-      
-      // Criar mensagem com link
-      const message = `🎁 *${APP_INFO.name}* 🎁\n\nOlá ${result.from}!\n\nClica no link abaixo para ver em quem caíste no sorteio de *${currentDrawing.name}*:\n\n${resultLink}\n\n${APP_INFO.name} v${APP_INFO.version}\nDesenvolvido por ${APP_INFO.developer}\n© 2025`;
-      
-      // Codificar mensagem para URL
-      const encodedMessage = encodeURIComponent(message);
-      const whatsappLink = `https://wa.me/${result.fromPhone.replace(/\D/g, '')}?text=${encodedMessage}`;
-      
-      // Abrir WhatsApp
-      window.open(whatsappLink, '_blank');
-      await new Promise(r => setTimeout(r, 500));
-    }
-
-    showMessage('✅ Links WhatsApp gerados! Completa os envios manualmente.', 'success');
+    // Gerar link direto para o resultado individual
+    const baseUrl = window.location.origin;
+    const resultLink = `${baseUrl}/resultado.html?drawing=${currentDrawing.id}&token=${result.token}`;
+    
+    // Criar mensagem com link
+    const message = `🎁 *${APP_INFO.name}* 🎁\n\nOlá ${result.from}!\n\nClica no link abaixo para ver em quem caíste no sorteio de *${currentDrawing.name}*:\n\n${resultLink}\n\n${APP_INFO.name} v${APP_INFO.version}\nDesenvolvido por ${APP_INFO.developer}\n© 2025`;
+    
+    // Codificar mensagem para URL
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappLink = `https://wa.me/${result.fromPhone.replace(/\D/g, '')}?text=${encodedMessage}`;
+    
+    // Abrir WhatsApp
+    window.open(whatsappLink, '_blank');
+    
+    // Mostrar indicação de envio
+    btn.style.display = 'none';
+    const sentSpan = btn.parentElement.querySelector(`[class="sent-status-${index}"]`);
+    if (sentSpan) sentSpan.style.display = 'inline-block';
+    
+    showMessage(`✓ Link enviado para ${result.from}!`, 'success');
   } catch (error) {
     console.error('Erro:', error);
-    showMessage('Erro ao gerar links WhatsApp', 'error');
-  } finally {
+    showMessage('Erro ao gerar link WhatsApp', 'error');
     btn.disabled = false;
   }
 }
@@ -787,18 +830,23 @@ function formatPhone(phone) {
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Atualizar versão no footer
+  const footerEl = document.getElementById('footerVersion');
+  if (footerEl) {
+    footerEl.textContent = `🎄 Amigão v${APP_INFO.version} 🎄 | Desenvolvido por ${APP_INFO.developer} ✨ | © 2025 ❤️ 💚`;
+  }
   showPage('menuPage');
 });
 
-function showOrganizerResultLink() {
+function showOrganizerAccessLink() {
   if (!currentDrawing) return;
-  const organizerToken = getOrganizerToken(currentDrawing.id);
-  if (!organizerToken) return;
+  const editToken = getEditToken(currentDrawing.id);
+  if (!editToken) return;
   const baseUrl = window.location.origin;
-  const organizerLink = `${baseUrl}/resultado.html?drawing=${currentDrawing.id}&token=${organizerToken}`;
+  const organizerLink = `${baseUrl}?drawing=${currentDrawing.id}&token=${editToken}`;
   const el = document.getElementById('organizerResultLink');
   if (el) {
-    el.innerHTML = `<b>Link privado do organizador (ver todos):</b><br><a href="${organizerLink}" target="_blank">${organizerLink}</a>`;
+    el.innerHTML = `<b>🔐 Link privado do organizador (aceder ao sorteio):</b><br><a href="${organizerLink}" target="_blank">${organizerLink}</a><br><small>Guarda este link para aceder ao sorteio mais tarde</small>`;
     el.style.display = 'block';
   }
 }

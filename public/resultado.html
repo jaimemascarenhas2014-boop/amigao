@@ -231,8 +231,39 @@
         function displayResult(data) {
             const container = document.getElementById('mainContainer');
             
-            // Ordenar resultados alfabeticamente por nome
-            const sortedResults = data.results.sort((a, b) => a.from.localeCompare(b.from));
+            // Se for participante, mostrar só o seu resultado
+            if (data.isOrganizer === false && data.yourResult) {
+                const result = data.yourResult;
+                container.innerHTML = `
+                    <div class="header">
+                        <div class="logo">🎁</div>
+                        <h1>O Teu Resultado</h1>
+                        <div class="drawing-name">Sorteio: <strong>${escapeHtml(data.drawingName)}</strong></div>
+                    </div>
+
+                    <div class="info-note">
+                        ℹ️ <strong>Resultado Privado:</strong> Este é o teu resultado neste sorteio!
+                    </div>
+
+                    <div class="all-results-section">
+                        <div class="result-item" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
+                            <div class="result-item-from" style="color: white;">Tu deste a um presente</div>
+                            <div class="result-item-arrow" style="color: white;">⬇️</div>
+                            <div class="result-item-to" style="color: white;">🎁 ${escapeHtml(result.to)}</div>
+                            <div class="result-item-value" style="color: white;">Máximo: €${result.maxValue}</div>
+                        </div>
+                    </div>
+
+                    <div class="footer">
+                        <div class="footer-text">💝 Amigão v1.1.0</div>
+                        <div class="footer-text">Desenvolvido por Jaime Soares Mascarenhas</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Se for organizador ou tiver resultados, mostrar todos
+            const sortedResults = (data.results || []).sort((a, b) => a.from.localeCompare(b.from));
             
             const resultsHtml = sortedResults.map((result, index) => `
                 <div class="result-item" style="animation-delay: ${index * 0.1}s">
@@ -262,7 +293,7 @@
                 </div>
 
                 <div class="footer">
-                    <div class="footer-text">💝 Amigão v1.0.0</div>
+                    <div class="footer-text">💝 Amigão v1.1.0</div>
                     <div class="footer-text">Desenvolvido por Jaime Soares Mascarenhas</div>
                 </div>
             `;
