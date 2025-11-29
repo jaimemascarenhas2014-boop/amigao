@@ -121,10 +121,16 @@ class DrawingsStore {
     const drawing = this.getById(drawingId);
     if (!drawing) return null;
 
+    // Remove the participant
     drawing.participants = drawing.participants.filter(p => p.id !== participantId);
     
+    // Ensure restrictions array exists
+    if (!drawing.restrictions) {
+      drawing.restrictions = [];
+    }
+    
     // Remove all restrictions involving this participant (including mutual pairs)
-    if (drawing.restrictions && drawing.restrictions.length > 0) {
+    if (drawing.restrictions.length > 0) {
       const restrictionsToRemove = new Set();
       drawing.restrictions.forEach(r => {
         if (r.from === participantId || r.to === participantId) {
@@ -142,7 +148,22 @@ class DrawingsStore {
       );
     }
 
-    return this.update(drawingId, drawing);
+    // Use saveAll directly instead of update to ensure proper error handling
+    const drawings = this.loadAll();
+    const index = drawings.findIndex(d => d.id === drawingId);
+    if (index === -1) return null;
+
+    drawings[index] = {
+      ...drawings[index],
+      participants: drawing.participants,
+      restrictions: drawing.restrictions,
+      updatedAt: new Date().toISOString()
+    };
+
+    const saved = this.saveAll(drawings);
+    if (!saved) return null;
+    
+    return drawings[index];
   }
 
   /**
