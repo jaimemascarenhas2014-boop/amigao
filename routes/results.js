@@ -4,8 +4,8 @@ const DrawingsStore = require('../utils/DrawingsStore');
 
 /**
  * GET /api/results/:drawingId
- * Obtém todos os resultados do sorteio com token de validação
- * Token query param obrigatório para segurança (apenas valida acesso, retorna todos)
+ * Obtém resultado baseado em token (participante vê só o seu, organizador vê todos)
+ * Token: pode ser token de participante OU token de organizador
  */
 router.get('/:drawingId', (req, res) => {
   const { drawingId } = req.params;
@@ -27,27 +27,38 @@ router.get('/:drawingId', (req, res) => {
     return res.status(404).json({ error: 'Ainda não há resultados neste sorteio' });
   }
 
-  // Validar que o token pertence a este sorteio (qualquer resultado válido permite acesso)
-  const tokenValid = drawing.result.find(r => r.token === token);
-  if (!tokenValid) {
+  // Verificar se é token de organizador (vê todos os resultados)
+  if (DrawingsStore.isOrganizerToken(drawingId, token)) {
+    return res.json({
+      drawingName: drawing.name,
+      drawingDate: drawing.createdAt,
+      maxValue: drawing.maxValue,
+      isOrganizer: true,
+      results: drawing.result.map(r => ({
+        from: r.from,
+        to: r.to,
+        maxValue: r.maxValue
+      }))
+    });
+  }
+
+  // Caso contrário, verificar se é token de participante (vê só o seu resultado)
+  const participantResult = DrawingsStore.getParticipantResult(drawingId, token);
+  if (!participantResult) {
     return res.status(403).json({ error: 'Token inválido ou acesso recusado' });
   }
 
-  // Retornar TODOS os resultados (agora que o token foi validado)
+  // Retornar APENAS o resultado desta pessoa
   res.json({
     drawingName: drawing.name,
     drawingDate: drawing.createdAt,
     maxValue: drawing.maxValue,
-    results: drawing.result.map(r => ({
-      from: r.from,
-      to: r.to,
-      maxValue: r.maxValue
-    })),
-    allResults: drawing.result.map(r => ({
-      from: r.from,
-      to: r.to,
-      maxValue: r.maxValue
-    }))
+    isOrganizer: false,
+    yourResult: {
+      from: participantResult.from,
+      to: participantResult.to,
+      maxValue: participantResult.maxValue
+    }
   });
 });
 

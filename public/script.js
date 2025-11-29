@@ -9,7 +9,7 @@ const API_URL = '/api';
 // App Info
 const APP_INFO = {
   name: 'Amigão',
-  version: '1.0.0',
+  version: '1.1.0',
   developer: 'Jaime Soares Mascarenhas'
 };
 
@@ -35,6 +35,21 @@ function saveEditToken(drawingId, token) {
 // Recuperar token de um sorteio
 function getEditToken(drawingId) {
   const tokens = loadSavedTokens();
+  return tokens[drawingId];
+}
+
+// Guardar token do organizador
+function saveOrganizerToken(drawingId, token) {
+  const key = 'amigao_organizer_tokens';
+  const tokens = JSON.parse(localStorage.getItem(key)) || {};
+  tokens[drawingId] = token;
+  localStorage.setItem(key, JSON.stringify(tokens));
+}
+
+// Obter token do organizador
+function getOrganizerToken(drawingId) {
+  const key = 'amigao_organizer_tokens';
+  const tokens = JSON.parse(localStorage.getItem(key)) || {};
   return tokens[drawingId];
 }
 
@@ -138,8 +153,9 @@ async function submitCreateDrawing(event) {
 
     const drawing = await response.json();
     
-    // ✅ GUARDAR TOKEN DE EDIÇÃO PRIVADO
+    // ✅ GUARDAR TOKENS PRIVADOS
     saveEditToken(drawing.id, drawing.editToken);
+    saveOrganizerToken(drawing.id, drawing.organizerToken); // Guardar token do organizador
     currentEditToken = drawing.editToken;
     
     currentDrawing = drawing;
@@ -504,6 +520,8 @@ async function executeDrawing() {
         // Ocultar container de resultados inicialmente
         document.getElementById('resultsContainer').classList.add('hidden');
         showMessage('Sorteio realizado com sucesso! Clica em "Ver Resultados" para consultar.', 'success');
+        
+        showOrganizerResultLink(); // Mostra o link do organizador após o sorteio
       }
     } else {
       showMessage(drawing.error, 'error');
@@ -603,7 +621,11 @@ function displayResults(results) {
     'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
   ];
 
-  list.innerHTML = results.map((result, index) => `
+  list.innerHTML = results.map((result, index) => {
+    const resultId = `result-${index}`;
+    const sentId = `sent-${index}`;
+    const btnId = `btn-${index}`;
+    return `
     <div class="result-card" style="background: ${colors[index % colors.length]}">
       <div class="result-from">👤 ${result.from}</div>
       <div style="text-align: center; margin: 15px 0;">
@@ -611,8 +633,14 @@ function displayResults(results) {
       </div>
       <div class="result-to">🎁 ${result.to}</div>
       <div class="result-value">💰 Valor máximo: ${result.maxValue}€</div>
+      <div style="margin-top: 15px; display: flex; gap: 10px; align-items: center;">
+        <button onclick="sendSingleWhatsApp(${index})" class="btn btn-primary btn-small" id="${btnId}">
+          💬 Enviar WhatsApp
+        </button>
+        <span id="${sentId}" style="display:none; color: #4CAF50; font-weight: bold;">✓ Enviado</span>
+      </div>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 function toggleResultsView() {
@@ -657,6 +685,47 @@ async function sendViaWhatsApp() {
     console.error('Erro:', error);
     showMessage('Erro ao gerar links WhatsApp', 'error');
   } finally {
+    btn.disabled = false;
+  }
+}
+
+async function sendSingleWhatsApp(index) {
+  if (!currentDrawing || !currentDrawing.result || currentDrawing.result.length === 0) {
+    showMessage('Nenhum sorteio para enviar', 'error');
+    return;
+  }
+
+  const result = currentDrawing.result[index];
+  if (!result) return;
+
+  const btn = document.getElementById(`btn-${index}`);
+  const sentSpan = document.getElementById(`sent-${index}`);
+  
+  btn.disabled = true;
+
+  try {
+    // Gerar link direto para o resultado individual
+    const baseUrl = window.location.origin;
+    const resultLink = `${baseUrl}/resultado.html?drawing=${currentDrawing.id}&token=${result.token}`;
+    
+    // Criar mensagem com link
+    const message = `🎁 *${APP_INFO.name}* 🎁\n\nOlá ${result.from}!\n\nClica no link abaixo para ver em quem caíste no sorteio de *${currentDrawing.name}*:\n\n${resultLink}\n\n${APP_INFO.name} v${APP_INFO.version}\nDesenvolvido por ${APP_INFO.developer}\n© 2025`;
+    
+    // Codificar mensagem para URL
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappLink = `https://wa.me/${result.fromPhone.replace(/\D/g, '')}?text=${encodedMessage}`;
+    
+    // Abrir WhatsApp
+    window.open(whatsappLink, '_blank');
+    
+    // Mostrar indicação de envio
+    btn.style.display = 'none';
+    sentSpan.style.display = 'inline-block';
+    
+    showMessage(`✓ Link enviado para ${result.from}!`, 'success');
+  } catch (error) {
+    console.error('Erro:', error);
+    showMessage('Erro ao gerar link WhatsApp', 'error');
     btn.disabled = false;
   }
 }
@@ -720,3 +789,16 @@ function formatPhone(phone) {
 document.addEventListener('DOMContentLoaded', () => {
   showPage('menuPage');
 });
+
+function showOrganizerResultLink() {
+  if (!currentDrawing) return;
+  const organizerToken = getOrganizerToken(currentDrawing.id);
+  if (!organizerToken) return;
+  const baseUrl = window.location.origin;
+  const organizerLink = `${baseUrl}/resultado.html?drawing=${currentDrawing.id}&token=${organizerToken}`;
+  const el = document.getElementById('organizerResultLink');
+  if (el) {
+    el.innerHTML = `<b>Link privado do organizador (ver todos):</b><br><a href="${organizerLink}" target="_blank">${organizerLink}</a>`;
+    el.style.display = 'block';
+  }
+}

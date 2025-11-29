@@ -57,10 +57,12 @@ class DrawingsStore {
     
     // Gerar token único de edição
     const editToken = this.generateSecureToken();
+    const organizerToken = this.generateSecureToken(); // Token para ver todos os resultados
     
     const newDrawing = {
       id: Date.now().toString(),
       editToken, // Token privado para edição
+      organizerToken, // Token para ver todos os resultados
       name,
       maxValue,
       participants: [],
@@ -156,10 +158,35 @@ class DrawingsStore {
   }
 
   /**
-   * Guarda o resultado do sorteio
+   * Guarda o resultado do sorteio com tokens individuais por participante
    */
   static saveResult(drawingId, result) {
-    return this.update(drawingId, { result });
+    // Adicionar token único para cada participante
+    const resultWithTokens = result.map(r => ({
+      ...r,
+      token: this.generateSecureToken() // Token individual para cada pessoa
+    }));
+    return this.update(drawingId, { result: resultWithTokens });
+  }
+
+  /**
+   * Obtém o resultado específico de um participante
+   */
+  static getParticipantResult(drawingId, participantToken) {
+    const drawing = this.getById(drawingId);
+    if (!drawing || !drawing.result) return null;
+    
+    // Encontrar resultado com este token
+    return drawing.result.find(r => r.token === participantToken);
+  }
+
+  /**
+   * Valida se é o token do organizador
+   */
+  static isOrganizerToken(drawingId, token) {
+    const drawing = this.getById(drawingId);
+    if (!drawing) return false;
+    return drawing.organizerToken === token;
   }
 
   /**
