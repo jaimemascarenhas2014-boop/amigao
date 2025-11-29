@@ -1,0 +1,1 @@
+Conversão para base64 da imagem do programador - será feita via Python
