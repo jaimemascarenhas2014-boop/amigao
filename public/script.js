@@ -9,7 +9,7 @@ const API_URL = '/api';
 // App Info
 const APP_INFO = {
   name: 'Amigão',
-  version: '1.1.0',
+  version: '1.2.0',
   developer: 'Jaime Soares Mascarenhas'
 };
 
@@ -867,8 +867,10 @@ async function loadDrawingFromUrl(drawingId, token) {
     currentDrawing = drawing;
     currentEditToken = token;
     
-    // Mostrar a página do sorteio
-    showPage('drawingPage');
+    // Mostrar a página do editor e atualizar dados
+    showPage('drawingEditorPage');
+    displayDrawingEditor();
+    
     showMessage('✓ Sorteio carregado com sucesso!', 'success');
   } catch (error) {
     console.error('Erro ao carregar sorteio:', error);
