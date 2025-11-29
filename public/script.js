@@ -9,7 +9,7 @@ const API_URL = '/api';
 // App Info
 const APP_INFO = {
   name: 'Amigão',
-  version: '1.2.0',
+  version: '1.2.1',
   developer: 'Jaime Soares Mascarenhas'
 };
 
@@ -463,14 +463,31 @@ function updateRestrictionsList() {
     return;
   }
 
-  list.innerHTML = currentDrawing.restrictions.map(r => {
+  // Group mutual restrictions and show only once
+  const seenPairs = new Set();
+  const restrictionItems = [];
+
+  currentDrawing.restrictions.forEach(r => {
+    // Skip if this pair was already processed
+    if (r.mutualPairId && seenPairs.has(r.mutualPairId)) {
+      return;
+    }
+
+    if (r.mutualPairId) {
+      seenPairs.add(r.mutualPairId);
+    }
+
     const from = currentDrawing.participants.find(p => p.id === r.from);
     const to = currentDrawing.participants.find(p => p.id === r.to);
-    return `
+    
+    const mututalIndicator = r.mutualPairId ? ' ↔' : '';
+    const mutualLabel = r.mutualPairId ? ' (Restrição Mútua)' : '';
+
+    restrictionItems.push(`
       <div class="list-item">
         <div class="list-item-info">
-          <div class="list-item-name">${from?.name} ❌ ${to?.name}</div>
-          <div class="list-item-detail">${from?.name} não pode tirar ${to?.name}</div>
+          <div class="list-item-name">${from?.name}${mututalIndicator} ${to?.name}</div>
+          <div class="list-item-detail">${from?.name} não pode tirar ${to?.name}${mutualLabel}</div>
         </div>
         <div class="list-item-actions">
           <button onclick="removeRestrictionFromDrawing('${r.id}')" class="btn btn-danger btn-small">
@@ -478,8 +495,10 @@ function updateRestrictionsList() {
           </button>
         </div>
       </div>
-    `;
-  }).join('');
+    `);
+  });
+
+  list.innerHTML = restrictionItems.join('');
 }
 
 // ============================================

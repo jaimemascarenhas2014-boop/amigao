@@ -136,24 +136,58 @@ class DrawingsStore {
     const drawing = this.getById(drawingId);
     if (!drawing) return null;
 
-    const restriction = {
-      id: Date.now().toString(),
+    // Check if restriction already exists in either direction
+    const existingRestriction = drawing.restrictions.find(
+      r => (r.from === from && r.to === to) || (r.from === to && r.to === from)
+    );
+
+    if (existingRestriction) {
+      return drawing; // Already exists, don't add duplicates
+    }
+
+    const mutualPairId = Date.now().toString();
+
+    // Add forward restriction (from -> to)
+    const restriction1 = {
+      id: mutualPairId + '_1',
       from,
-      to
+      to,
+      mutualPairId
     };
 
-    drawing.restrictions.push(restriction);
+    // Add reverse restriction (to -> from)
+    const restriction2 = {
+      id: mutualPairId + '_2',
+      from: to,
+      to: from,
+      mutualPairId
+    };
+
+    drawing.restrictions.push(restriction1);
+    drawing.restrictions.push(restriction2);
     return this.update(drawingId, drawing);
   }
 
   /**
-   * Remove uma restrição
+   * Remove uma restrição (e sua restrição mútua)
    */
   static removeRestriction(drawingId, restrictionId) {
     const drawing = this.getById(drawingId);
     if (!drawing) return null;
 
-    drawing.restrictions = drawing.restrictions.filter(r => r.id !== restrictionId);
+    // Find the restriction to get its mutual pair ID
+    const restriction = drawing.restrictions.find(r => r.id === restrictionId);
+    
+    if (restriction && restriction.mutualPairId) {
+      // Remove both restrictions in the mutual pair
+      drawing.restrictions = drawing.restrictions.filter(
+        r => r.mutualPairId !== restriction.mutualPairId
+      );
+    } else {
+      // Fallback for old restrictions without mutualPairId
+      drawing.restrictions = drawing.restrictions.filter(r => r.id !== restrictionId);
+    }
+
     return this.update(drawingId, drawing);
   }
 
