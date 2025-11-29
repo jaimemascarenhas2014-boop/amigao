@@ -122,9 +122,25 @@ class DrawingsStore {
     if (!drawing) return null;
 
     drawing.participants = drawing.participants.filter(p => p.id !== participantId);
-    drawing.restrictions = drawing.restrictions.filter(
-      r => r.from !== participantId && r.to !== participantId
-    );
+    
+    // Remove all restrictions involving this participant (including mutual pairs)
+    if (drawing.restrictions && drawing.restrictions.length > 0) {
+      const restrictionsToRemove = new Set();
+      drawing.restrictions.forEach(r => {
+        if (r.from === participantId || r.to === participantId) {
+          // If it's a mutual restriction, mark the entire pair for removal
+          if (r.mutualPairId) {
+            restrictionsToRemove.add(r.mutualPairId);
+          } else {
+            restrictionsToRemove.add(r.id);
+          }
+        }
+      });
+      
+      drawing.restrictions = drawing.restrictions.filter(r => 
+        !restrictionsToRemove.has(r.mutualPairId || r.id)
+      );
+    }
 
     return this.update(drawingId, drawing);
   }

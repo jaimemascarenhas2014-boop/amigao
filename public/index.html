@@ -189,7 +189,7 @@
           
           <div class="form-group">
             <input type="text" id="participantName" placeholder="📝 Nome do participante" class="input">
-            <input type="tel" id="participantPhone" placeholder="📱 Telefone (ex: +351912345678 ou 912345678)" class="input">
+            <input type="text" id="participantPhone" placeholder="📱 Telefone (9 dígitos: ex: 912345678)" class="input" maxlength="9" pattern="[0-9]{9}">
             <button onclick="addParticipantToDrawing()" class="btn btn-primary">➕ Adicionar 🎄</button>
           </div>
 
@@ -285,6 +285,19 @@
       <p class="footer-decoration">
         🎅 🎄 🎁 ✨ ⛄ ❄️ 🔔 💚 ❤️ 🌟 🎉 🎊
       </p>
+      
+      <!-- Secção de Donativo -->
+      <div class="donation-section" style="margin-top: 20px; padding: 15px; background: rgba(255, 215, 0, 0.1); border-radius: 8px; border-left: 4px solid #FFD700;">
+        <p style="margin: 5px 0; font-size: 0.95em;">
+          💳 <strong>Apreciaste o Amigão?</strong> Considera fazer um donativo via <strong>MBWay</strong> ☺️
+        </p>
+        <p style="margin: 5px 0; font-size: 0.9em;">
+          📱 <strong>MBWay:</strong> <span style="color: #FFD700; font-weight: bold;">+351 912 345 678</span>
+        </p>
+        <p style="margin: 5px 0; font-size: 0.85em; color: #999;">
+          Os teus donativos ajudam a manter e melhorar a aplicação! 🙏✨
+        </p>
+      </div>
     </footer>
   </div>
 

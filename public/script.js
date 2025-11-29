@@ -306,6 +306,12 @@ async function addParticipantToDrawing() {
     return;
   }
 
+  // Validar telefone: apenas números e exatamente 9 dígitos
+  if (!/^\d{9}$/.test(phone)) {
+    showMessage('Telefone deve ter exatamente 9 dígitos numéricos', 'error');
+    return;
+  }
+
   try {
     const response = await fetch(`${API_URL}/drawings/${currentDrawing.id}/participants`, {
       method: 'POST',
