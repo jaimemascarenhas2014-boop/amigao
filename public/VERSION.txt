@@ -1,0 +1,3 @@
+Versão 1.2.7 - Teste de Deploy
+Botão 👤 deve estar visível ao lado do nome "Jaime Soares Mascarenhas"
+Data de deploy: 2025-11-29

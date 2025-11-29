@@ -3,10 +3,10 @@ services:
     name: amigao
     env: node
     plan: free
-    buildCommand: npm install && npm run build 2>/dev/null || true
+    buildCommand: bash build.sh
     startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
-      - key: CACHE_BUSTING_TOKEN
-        value: "1764518400"
+      - key: FORCE_REBUILD
+        value: "true"
