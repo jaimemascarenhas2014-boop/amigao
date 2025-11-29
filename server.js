@@ -24,12 +24,27 @@ app.use('/api/whatsapp', whatsappRoutes);
 app.use('/api/drawings', drawingsManagementRoutes);
 app.use('/api/results', resultsRoutes);
 
-// Serve index.html for root path
+// Serve index.html for root path with force refresh
 app.get('/', (req, res) => {
-  res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+  // Disable caching completely
+  res.set('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0');
   res.set('Pragma', 'no-cache');
   res.set('Expires', '0');
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.set('ETag', 'W/"' + Date.now() + '"'); // Unique ETag for each request
+  
+  // Send the file with fresh content
+  const fs = require('fs');
+  const path = require('path');
+  const filePath = path.join(__dirname, 'public', 'index.html');
+  
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).send('Erro ao carregar página');
+      return;
+    }
+    res.set('Content-Type', 'text/html; charset=utf-8');
+    res.send(data);
+  });
 });
 
 // Error handling middleware

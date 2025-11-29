@@ -281,7 +281,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-      <p id="footerVersion">🎄 Amigão v1.2.8 🎄 | Desenvolvido por Jaime Soares Mascarenhas <button onclick="openDeveloperModal()" style="background: none; border: none; cursor: pointer; font-size: 1.2em; padding: 0 5px; vertical-align: middle; title='Ver programador'">👤</button> ✨ | © 2025 ❤️ 💚</p>
+      <p id="footerVersion">🎄 Amigão v1.2.7 🎄 | Desenvolvido por Jaime Soares Mascarenhas <button onclick="openDeveloperModal()" style="background: none; border: none; cursor: pointer; font-size: 1.2em; padding: 0 5px; vertical-align: middle; title='Ver programador'">👤</button> ✨ | © 2025 ❤️ 💚</p>
       <p class="footer-decoration">
         🎅 🎄 🎁 ✨ ⛄ ❄️ 🔔 💚 ❤️ 🌟 🎉 🎊
       </p>
