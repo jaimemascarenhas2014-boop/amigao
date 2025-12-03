@@ -7,9 +7,10 @@
  */
 
 class DrawingAlgorithm {
-  constructor(participants, restrictions = []) {
+  constructor(participants, restrictions = [], fixations = []) {
     this.participants = participants;
     this.restrictions = restrictions;
+    this.fixations = fixations; // Array de {from, to} - fixações pré-definidas
   }
 
   /**
@@ -31,6 +32,12 @@ class DrawingAlgorithm {
           return false;
         }
       }
+
+      // Verificar fixações
+      const fixation = this.fixations.find(f => f.from === giver);
+      if (fixation && fixation.to !== receiver) {
+        return false;
+      }
     }
     return true;
   }
@@ -42,6 +49,15 @@ class DrawingAlgorithm {
     const maxAttempts = 100;
     let attempts = 0;
 
+    // Aplicar fixações primeiro
+    const fixedReceivers = new Map();
+    const usedReceivers = new Set();
+    
+    for (const fixation of this.fixations) {
+      fixedReceivers.set(fixation.from, fixation.to);
+      usedReceivers.add(fixation.to);
+    }
+
     while (attempts < maxAttempts) {
       // Criar array com IDs dos participantes
       let receivers = this.participants.map(p => p.id);
@@ -50,6 +66,20 @@ class DrawingAlgorithm {
       for (let i = receivers.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [receivers[i], receivers[j]] = [receivers[j], receivers[i]];
+      }
+
+      // Aplicar fixações ao array de receivers
+      for (let i = 0; i < this.participants.length; i++) {
+        const giverId = this.participants[i].id;
+        if (fixedReceivers.has(giverId)) {
+          const fixedReceiverId = fixedReceivers.get(giverId);
+          // Encontrar posição da fixação no array
+          const fixedIndex = receivers.indexOf(fixedReceiverId);
+          if (fixedIndex !== -1) {
+            // Trocar com a posição atual
+            [receivers[i], receivers[fixedIndex]] = [receivers[fixedIndex], receivers[i]];
+          }
+        }
       }
 
       // Verificar se o sorteio é válido
@@ -78,7 +108,7 @@ class DrawingAlgorithm {
 
     return {
       success: false,
-      error: `Não foi possível fazer um sorteio válido após ${maxAttempts} tentativas. Tenta remover algumas restrições.`,
+      error: `Não foi possível fazer um sorteio válido após ${maxAttempts} tentativas. Tenta remover algumas restrições ou fixações.`,
       attempts
     };
   }

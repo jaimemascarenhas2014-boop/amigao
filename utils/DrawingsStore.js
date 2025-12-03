@@ -67,6 +67,7 @@ class DrawingsStore {
       maxValue,
       participants: [],
       restrictions: [],
+      fixations: [], // Array de {id, from, to} - definições pré-determinadas
       result: null,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
@@ -225,6 +226,56 @@ class DrawingsStore {
       drawing.restrictions = drawing.restrictions.filter(r => r.id !== restrictionId);
     }
 
+    return this.update(drawingId, drawing);
+  }
+
+  /**
+   * Adiciona uma fixação (atribui uma pessoa fixa a um participante)
+   */
+  static addFixation(drawingId, from, to) {
+    const drawing = this.getById(drawingId);
+    if (!drawing) return null;
+
+    // Validar que ambos existem
+    const fromParticipant = drawing.participants.find(p => p.id === from);
+    const toParticipant = drawing.participants.find(p => p.id === to);
+    
+    if (!fromParticipant || !toParticipant) {
+      throw new Error('Participante não encontrado');
+    }
+
+    if (from === to) {
+      throw new Error('Não podes fixar uma pessoa a si mesma');
+    }
+
+    // Remover fixação anterior do mesmo participante (se existir)
+    if (!drawing.fixations) {
+      drawing.fixations = [];
+    }
+    drawing.fixations = drawing.fixations.filter(f => f.from !== from);
+
+    // Adicionar nova fixação
+    drawing.fixations.push({
+      id: Date.now().toString(),
+      from,
+      to
+    });
+
+    return this.update(drawingId, drawing);
+  }
+
+  /**
+   * Remove uma fixação
+   */
+  static removeFixation(drawingId, fixationId) {
+    const drawing = this.getById(drawingId);
+    if (!drawing) return null;
+
+    if (!drawing.fixations) {
+      drawing.fixations = [];
+    }
+
+    drawing.fixations = drawing.fixations.filter(f => f.id !== fixationId);
     return this.update(drawingId, drawing);
   }
 

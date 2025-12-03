@@ -271,6 +271,8 @@ function displayDrawingEditor() {
   updateParticipantsList();
   updateRestrictionSelects();
   updateRestrictionsList();
+  updateFixationSelects();
+  updateFixationsList();
   
   // Limpar formulários
   document.getElementById('participantName').value = '';
@@ -361,6 +363,7 @@ async function addParticipantToDrawing() {
     document.getElementById('participantPhone').value = '';
     updateParticipantsList();
     updateRestrictionSelects();
+    updateFixationSelects();
     showMessage(`${name} foi adicionado!`, 'success');
   } catch (error) {
     console.error('Erro:', error);
@@ -385,6 +388,8 @@ async function removeParticipantFromDrawing(participantId) {
     updateParticipantsList();
     updateRestrictionSelects();
     updateRestrictionsList();
+    updateFixationSelects();
+    updateFixationsList();
     showMessage('Participante removido', 'success');
   } catch (error) {
     console.error('Erro:', error);
@@ -547,6 +552,118 @@ function updateRestrictionsList() {
 }
 
 // ============================================
+// GESTÃO DE FIXAÇÕES
+// ============================================
+
+function updateFixationSelects() {
+  if (!currentDrawing) return;
+  
+  const fromSelect = document.getElementById('fixationFrom');
+  const toSelect = document.getElementById('fixationTo');
+  
+  const options = currentDrawing.participants
+    .map(p => `<option value="${p.id}">${p.name}</option>`)
+    .join('');
+    
+  fromSelect.innerHTML = '<option value="">Seleciona o participante:</option>' + options;
+  toSelect.innerHTML = '<option value="">Seleciona quem vai tirar:</option>' + options;
+}
+
+async function addFixationToDrawing() {
+  if (!currentDrawing) return;
+
+  const from = document.getElementById('fixationFrom').value;
+  const to = document.getElementById('fixationTo').value;
+
+  if (!from || !to) {
+    showMessage('Seleciona os dois participantes', 'error');
+    return;
+  }
+
+  if (from === to) {
+    showMessage('Não podes fixar uma pessoa a si mesma', 'error');
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/drawings/${currentDrawing.id}/fixations`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ from, to, editToken: currentEditToken })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      showMessage(error.error || 'Erro ao adicionar fixação', 'error');
+      return;
+    }
+
+    currentDrawing = await response.json();
+    document.getElementById('fixationFrom').value = '';
+    document.getElementById('fixationTo').value = '';
+    updateFixationsList();
+    showMessage('Fixação adicionada! Este participante vai tirar esta pessoa no sorteio.', 'success');
+  } catch (error) {
+    console.error('Erro:', error);
+    showMessage('Erro ao adicionar fixação', 'error');
+  }
+}
+
+async function removeFixationFromDrawing(fixationId) {
+  if (!currentDrawing) return;
+
+  try {
+    const response = await fetch(`${API_URL}/drawings/${currentDrawing.id}/fixations/${fixationId}`, 
+      { 
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ editToken: currentEditToken })
+      });
+
+    if (!response.ok) throw new Error('Erro ao remover');
+
+    currentDrawing = await response.json();
+    updateFixationsList();
+    showMessage('Fixação removida', 'success');
+  } catch (error) {
+    console.error('Erro:', error);
+    showMessage('Erro ao remover fixação', 'error');
+  }
+}
+
+function updateFixationsList() {
+  if (!currentDrawing) return;
+
+  const list = document.getElementById('fixationsList');
+
+  if (!currentDrawing.fixations || currentDrawing.fixations.length === 0) {
+    list.innerHTML = '<p class="empty-state">Sem fixações</p>';
+    return;
+  }
+
+  const fixationItems = currentDrawing.fixations.map(f => {
+    const from = currentDrawing.participants.find(p => p.id === f.from);
+    const to = currentDrawing.participants.find(p => p.id === f.to);
+
+    return `
+      <div class="list-item">
+        <div class="list-item-info">
+          <div class="list-item-name">${from?.name} → ${to?.name}</div>
+          <div class="list-item-detail">${from?.name} vai tirar ${to?.name}</div>
+        </div>
+        <div class="list-item-actions">
+          <button onclick="removeFixationFromDrawing('${f.id}')" class="btn btn-danger btn-small">
+            Remover
+          </button>
+        </div>
+      </div>
+    `;
+  });
+
+  list.innerHTML = fixationItems.join('');
+}
+
+// ============================================
 // SORTEIO
 // ============================================
 
@@ -561,7 +678,7 @@ async function executeDrawing() {
   btn.classList.add('loading');
 
   try {
-    const drawing = performDrawing(currentDrawing.participants, currentDrawing.restrictions);
+    const drawing = performDrawing(currentDrawing.participants, currentDrawing.restrictions, currentDrawing.fixations || []);
 
     if (drawing.success) {
       currentDrawing.result = drawing.result;
@@ -599,9 +716,21 @@ async function executeDrawing() {
   }
 }
 
-function performDrawing(participants, restrictions) {
+function performDrawing(participants, restrictions, fixations = []) {
   if (participants.length < 2) {
     return { success: false, error: 'Precisa de pelo menos 2 participantes' };
+  }
+
+  // Verificar se há fixações impossíveis
+  const fixedReceivers = new Set();
+  for (const fixation of fixations) {
+    // Validar que o destinatário não está já fixado para outra pessoa
+    for (const other of fixations) {
+      if (other.to === fixation.to && other.from !== fixation.from) {
+        return { success: false, error: `O participante ${participants.find(p => p.id === fixation.to)?.name || 'desconhecido'} já está fixado a outra pessoa` };
+      }
+    }
+    fixedReceivers.add(fixation.to);
   }
 
   const maxAttempts = 100;
@@ -610,6 +739,19 @@ function performDrawing(participants, restrictions) {
   while (attempts < maxAttempts) {
     let receivers = participants.map(p => p.id);
     receivers = shuffleArray(receivers);
+
+    // Aplicar fixações ao array de receivers
+    for (let i = 0; i < participants.length; i++) {
+      const giverId = participants[i].id;
+      const fixation = fixations.find(f => f.from === giverId);
+      if (fixation) {
+        const fixedIndex = receivers.indexOf(fixation.to);
+        if (fixedIndex !== -1) {
+          // Trocar com a posição atual
+          [receivers[i], receivers[fixedIndex]] = [receivers[fixedIndex], receivers[i]];
+        }
+      }
+    }
 
     let valid = true;
     for (let i = 0; i < participants.length; i++) {
@@ -626,6 +768,13 @@ function performDrawing(participants, restrictions) {
           valid = false;
           break;
         }
+      }
+
+      // Validar fixações
+      const fixation = fixations.find(f => f.from === giver.id);
+      if (fixation && fixation.to !== receiverId) {
+        valid = false;
+        break;
       }
 
       if (!valid) break;
@@ -659,7 +808,7 @@ function performDrawing(participants, restrictions) {
 
   return {
     success: false,
-    error: `Não foi possível fazer um sorteio válido após ${maxAttempts} tentativas. Tenta remover algumas restrições.`,
+    error: `Não foi possível fazer um sorteio válido após ${maxAttempts} tentativas. Tenta remover algumas restrições ou fixações.`,
     attempts
   };
 }

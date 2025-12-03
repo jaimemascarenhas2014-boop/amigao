@@ -229,6 +229,30 @@
           </div>
         </section>
 
+        <!-- Seção de Fixações -->
+        <section class="section fixations-section">
+          <h3>📌 Fixações (Opcional) 📌</h3>
+          <div class="section-decoration">
+            <span>📍 📍 📍</span>
+          </div>
+          <p class="help-text">🎯 Define quem vai tirar a cada pessoa (resultado pré-determinado) 🎯</p>
+          
+          <div class="form-group">
+            <select id="fixationFrom" class="input">
+              <option value="">Seleciona o participante:</option>
+            </select>
+            <select id="fixationTo" class="input">
+              <option value="">Seleciona quem vai tirar:</option>
+            </select>
+            <button onclick="addFixationToDrawing()" class="btn btn-secondary">📌 Fixar</button>
+          </div>
+
+          <!-- Lista de Fixações -->
+          <div id="fixationsList" class="list">
+            <p class="empty-state">✅ Sem fixações ✅</p>
+          </div>
+        </section>
+
         <!-- Seção de Sorteio -->
         <section class="section drawing-section">
           <h3>🎲 Executar Sorteio 🎲</h3>

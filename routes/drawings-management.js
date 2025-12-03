@@ -157,4 +157,43 @@ router.delete('/:id/restrictions/:restrictionId', validateEditToken, (req, res) 
   }
 });
 
+// Adicionar fixação - REQUER TOKEN
+router.post('/:id/fixations', validateEditToken, (req, res) => {
+  const { id } = req.params;
+  const { from, to } = req.body;
+
+  if (!from || !to) {
+    return res.status(400).json({ error: 'from e to são obrigatórios' });
+  }
+
+  if (from === to) {
+    return res.status(400).json({ error: 'Não podes fixar uma pessoa a si mesma' });
+  }
+
+  try {
+    const drawing = DrawingsStore.addFixation(id, from, to);
+    if (!drawing) {
+      return res.status(404).json({ error: 'Sorteio não encontrado' });
+    }
+    res.status(201).json(drawing);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Remover fixação - REQUER TOKEN
+router.delete('/:id/fixations/:fixationId', validateEditToken, (req, res) => {
+  const { id, fixationId } = req.params;
+
+  try {
+    const drawing = DrawingsStore.removeFixation(id, fixationId);
+    if (!drawing) {
+      return res.status(404).json({ error: 'Sorteio não encontrado' });
+    }
+    res.json(drawing);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao remover fixação' });
+  }
+});
+
 module.exports = router;
