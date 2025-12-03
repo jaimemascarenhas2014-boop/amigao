@@ -5,6 +5,7 @@ const path = require('path');
 require('dotenv').config();
 
 const app = express();
+const { initializeDatabase } = require('./utils/Database');
 
 // Middleware
 app.use(cors());
@@ -15,7 +16,7 @@ app.use(express.static('public'));
 const drawingRoutes = require('./routes/drawing');
 const participantRoutes = require('./routes/participants');
 const whatsappRoutes = require('./routes/whatsapp');
-const drawingsManagementRoutes = require('./routes/drawings-management');
+const drawingsManagementRoutes = require('./routes/drawings-management-postgres');
 const resultsRoutes = require('./routes/results');
 
 app.use('/api/drawing', drawingRoutes);
@@ -77,8 +78,24 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor a correr em http://localhost:${PORT}`);
-});
+
+// Inicializar base de dados e começar servidor
+async function startServer() {
+  try {
+    console.log('🔧 Inicializando base de dados...');
+    await initializeDatabase();
+    console.log('✅ Base de dados pronta!');
+    
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor a correr em http://localhost:${PORT}`);
+      console.log(`📦 DATABASE_URL: ${process.env.DATABASE_URL ? 'Configurada' : 'NÃO CONFIGURADA'}`);
+    });
+  } catch (error) {
+    console.error('❌ Erro ao iniciar servidor:', error);
+    process.exit(1);
+  }
+}
+
+startServer();
 
 module.exports = app;
