@@ -28,9 +28,15 @@ class DrawingsStore {
    */
   static async getById(id) {
     try {
+      console.log(`🔍 Procurando sorteio com ID: ${id}`);
       const result = await db.query('SELECT * FROM drawings WHERE id = $1', [id]);
-      if (result.rows.length === 0) return null;
       
+      if (result.rows.length === 0) {
+        console.log(`❌ Sorteio ${id} não encontrado`);
+        return null;
+      }
+      
+      console.log(`✅ Sorteio ${id} encontrado`);
       const drawing = this.rowToDrawing(result.rows[0]);
       drawing.participants = await this.loadParticipants(id);
       drawing.restrictions = await this.loadRestrictions(id);
@@ -38,7 +44,7 @@ class DrawingsStore {
       
       return drawing;
     } catch (error) {
-      console.error('Erro ao carregar sorteio:', error);
+      console.error('❌ Erro ao carregar sorteio:', error);
       return null;
     }
   }

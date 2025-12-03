@@ -26,7 +26,8 @@ async function initializeDatabase() {
         result JSONB,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
+      );
+      CREATE INDEX IF NOT EXISTS idx_drawings_created_at ON drawings(created_at);
     `);
 
     // Tabela de participantes
