@@ -17,7 +17,7 @@ const drawingRoutes = require('./routes/drawing');
 const participantRoutes = require('./routes/participants');
 const whatsappRoutes = require('./routes/whatsapp');
 const drawingsManagementRoutes = require('./routes/drawings-management-postgres');
-const resultsRoutes = require('./routes/results');
+const resultsRoutes = require('./routes/results-postgres');
 
 app.use('/api/drawing', drawingRoutes);
 app.use('/api/participants', participantRoutes);
